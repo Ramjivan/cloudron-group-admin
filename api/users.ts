@@ -58,6 +58,18 @@ usersApp.get("/", async (c) => {
     }
 });
 
+// --- GET /api/users/:username/exists ---
+usersApp.get("/:username/exists", async (c) => {
+    const username = c.req.param("username");
+    try {
+        const user = await cloudron.getUserByUsername(username);
+        return c.json({ exists: !!user });
+    } catch (error) {
+        logger.error(`Error checking if user '${username}' exists:`, { message: error.message });
+        return c.json({ error: "Failed to check user existence" }, 500);
+    }
+});
+
 // --- POST /api/users ---
 // Creates a user, and optionally a mailbox
 usersApp.post("/", async (c) => {

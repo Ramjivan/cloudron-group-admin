@@ -210,7 +210,7 @@ td:last-child {
 /* Modal Tabs */
 .tabs {
     display: flex;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 2px solid #dee2e6;
     margin-bottom: 1.5rem;
 }
 .tab-link {
@@ -221,10 +221,16 @@ td:last-child {
     font-size: 1.1rem;
     color: var(--secondary-color);
     border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-bottom-color 0.2s;
+    margin-bottom: -2px;
+}
+.tab-link:hover {
+    color: var(--primary-color);
 }
 .tab-link.active {
     color: var(--primary-color);
     border-bottom-color: var(--primary-color);
+    font-weight: 600;
 }
 .tab-content {
     display: none;
@@ -267,6 +273,11 @@ td:last-child {
 .error-message {
     color: var(--error-color);
     margin-top: 0.5rem;
+}
+.success-message {
+    color: #28a745;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
 }
 .info-message {
     color: var(--secondary-color);

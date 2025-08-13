@@ -8,18 +8,23 @@ document.addEventListener("DOMContentLoaded", () => {
         addUserError: document.getElementById("add-user-error"),
         addMailboxError: document.getElementById("add-mailbox-error"),
         mailboxCheckMessage: document.getElementById("mailbox-check-message"),
+        mailboxCheckMessageUser: document.getElementById("mailbox-check-message-user"),
+        usernameCheckMessage: document.getElementById("username-check-message"),
         // Inputs
         newUsernameInput: document.getElementById("new-username"),
         newDisplayNameInput: document.getElementById("new-displayname"),
         createMailboxCheckbox: document.getElementById("create-mailbox-checkbox"),
         mailboxNameWrapper: document.getElementById("mailbox-name-wrapper"),
         newMailboxNameUserInput: document.getElementById("new-mailbox-name-user"),
+        newMailboxDomainUserSelect: document.getElementById("new-mailbox-domain-user"),
         newMailboxNameInput: document.getElementById("new-mailbox-name"),
         newMailboxDomainSelect: document.getElementById("new-mailbox-domain"),
         newMailboxOwnerSelect: document.getElementById("new-mailbox-owner"),
         // Tables
         userListBody: document.getElementById("user-list")?.querySelector("tbody"),
         mailboxListBody: document.getElementById("mailbox-list")?.querySelector("tbody"),
+        // Buttons
+        createUserBtn: document.getElementById("create-user-btn"),
         // Modals & Buttons
         addNewBtn: document.getElementById("add-new-btn"),
         creationModal: document.getElementById("creation-modal"),
@@ -141,13 +146,10 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const renderSelects = (domains, users) => {
-        elements.newMailboxDomainSelect.innerHTML = "";
-        domains.forEach(domain => {
-            const option = document.createElement("option");
-            option.value = domain;
-            option.textContent = domain;
-            elements.newMailboxDomainSelect.appendChild(option);
-        });
+        const domainOptions = domains.map(domain => `<option value="${domain}">${domain}</option>`).join('');
+        elements.newMailboxDomainSelect.innerHTML = domainOptions;
+        elements.newMailboxDomainUserSelect.innerHTML = domainOptions;
+
         elements.newMailboxOwnerSelect.innerHTML = `<option value="" disabled selected>Select owner</option>`;
         users.forEach(user => {
             const option = document.createElement("option");
@@ -165,6 +167,135 @@ document.addEventListener("DOMContentLoaded", () => {
     elements.newMailboxNameUserInput.addEventListener("input", validateInput);
     elements.newMailboxNameInput.addEventListener("input", validateInput);
 
+    const checkMailboxExists = async (name, domain) => {
+        if (!name || !domain) return false;
+        const res = await api(`/mailboxes/${domain}/${name}/exists`);
+        return res.exists;
+    };
+
+    const checkUsernameExists = async (username) => {
+        if (!username) return false;
+        const res = await api(`/users/${username}/exists`);
+        return res.exists;
+    };
+
+    let isUsernameAvailable = false;
+    let isMailboxAvailable = false;
+
+    const updateUserButtonState = () => {
+        const createMailbox = elements.createMailboxCheckbox.checked;
+        if (createMailbox) {
+            elements.createUserBtn.disabled = !isUsernameAvailable || !isMailboxAvailable;
+        } else {
+            elements.createUserBtn.disabled = !isUsernameAvailable;
+        }
+    };
+
+    const handleUsernameCheck = async () => {
+        const username = elements.newUsernameInput.value;
+        const messageEl = elements.usernameCheckMessage;
+        
+        messageEl.textContent = "";
+        messageEl.className = 'info-message';
+        elements.newUsernameInput.classList.remove('error', 'success');
+        isUsernameAvailable = false;
+
+        if (username) {
+            try {
+                messageEl.textContent = "Checking...";
+                if (await checkUsernameExists(username)) {
+                    messageEl.textContent = "Username is already taken.";
+                    messageEl.className = 'error-message';
+                    elements.newUsernameInput.classList.add('error');
+                } else {
+                    messageEl.textContent = "Username is available.";
+                    messageEl.className = 'success-message';
+                    elements.newUsernameInput.classList.add('success');
+                    isUsernameAvailable = true;
+                }
+            } catch (error) {
+                messageEl.textContent = "Error checking username.";
+                messageEl.className = 'error-message';
+                elements.newUsernameInput.classList.add('error');
+            }
+        }
+        updateUserButtonState();
+    };
+
+    const handleMailboxCheck = async (nameInput, domainSelect, messageEl) => {
+        const name = nameInput.value;
+        const domain = domainSelect.value;
+        
+        messageEl.textContent = "";
+        messageEl.className = 'info-message';
+        nameInput.classList.remove('error', 'success');
+        isMailboxAvailable = false;
+
+        if (name && domain) {
+            try {
+                messageEl.textContent = "Checking...";
+                if (await checkMailboxExists(name, domain)) {
+                    messageEl.textContent = "Mailbox already exists.";
+                    messageEl.className = 'error-message';
+                    nameInput.classList.add('error');
+                } else {
+                    messageEl.textContent = "Mailbox name is available.";
+                    messageEl.className = 'success-message';
+                    nameInput.classList.add('success');
+                    isMailboxAvailable = true;
+                }
+            } catch (error) {
+                messageEl.textContent = "Error checking availability.";
+                messageEl.className = 'error-message';
+                nameInput.classList.add('error');
+            }
+        }
+        updateUserButtonState();
+    };
+    
+    let usernameDebounceTimer, userMailboxDebounceTimer, newMailboxDebounceTimer;
+
+    elements.newUsernameInput.addEventListener("input", () => {
+        clearTimeout(usernameDebounceTimer);
+        usernameDebounceTimer = setTimeout(handleUsernameCheck, 500);
+    });
+
+    elements.newMailboxNameUserInput.addEventListener("input", () => {
+        clearTimeout(userMailboxDebounceTimer);
+        userMailboxDebounceTimer = setTimeout(() => handleMailboxCheck(
+            elements.newMailboxNameUserInput,
+            elements.newMailboxDomainUserSelect,
+            elements.mailboxCheckMessageUser
+        ), 500);
+    });
+    elements.newMailboxDomainUserSelect.addEventListener("change", () => {
+        clearTimeout(userMailboxDebounceTimer);
+        userMailboxDebounceTimer = setTimeout(() => handleMailboxCheck(
+            elements.newMailboxNameUserInput,
+            elements.newMailboxDomainUserSelect,
+            elements.mailboxCheckMessageUser
+        ), 500);
+    });
+
+    elements.newMailboxNameInput.addEventListener("input", () => {
+        clearTimeout(newMailboxDebounceTimer);
+        newMailboxDebounceTimer = setTimeout(() => handleMailboxCheck(
+            elements.newMailboxNameInput,
+            elements.newMailboxDomainSelect,
+            elements.mailboxCheckMessage
+        ), 500);
+    });
+    elements.newMailboxDomainSelect.addEventListener("change", () => {
+        clearTimeout(newMailboxDebounceTimer);
+        newMailboxDebounceTimer = setTimeout(() => handleMailboxCheck(
+            elements.newMailboxNameInput,
+            elements.newMailboxDomainSelect,
+            elements.mailboxCheckMessage
+        ), 500);
+    });
+
+    elements.createMailboxCheckbox.addEventListener("change", updateUserButtonState);
+
     // --- Event Listeners ---
     elements.addUserForm.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -176,6 +307,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const fallbackEmail = document.getElementById('fallback-email').value;
         const createMailbox = elements.createMailboxCheckbox.checked;
         const mailboxName = elements.newMailboxNameUserInput.value || username;
+        const domain = elements.newMailboxDomainUserSelect.value;
 
         if (password !== confirmPassword) {
             elements.addUserError.textContent = "Passwords do not match.";
@@ -191,7 +323,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     password, 
                     fallbackEmail, 
                     createMailbox, 
-                    mailboxName 
+                    mailboxName,
+                    domain
                 }),
             });
             elements.addUserForm.reset();
@@ -223,33 +356,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     elements.createMailboxCheckbox.addEventListener("change", () => {
         elements.mailboxNameWrapper.style.display = elements.createMailboxCheckbox.checked ? "block" : "none";
-    });
-
-    let debounceTimer;
-    elements.newMailboxNameInput.addEventListener("input", () => {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(async () => {
-            const name = elements.newMailboxNameInput.value;
-            const domain = elements.newMailboxDomainSelect.value;
-            elements.mailboxCheckMessage.textContent = "";
-            elements.newMailboxNameInput.classList.remove('error', 'success');
-
-            if (name && domain) {
-                try {
-                    elements.mailboxCheckMessage.textContent = "Checking...";
-                    const res = await api(`/mailboxes/${domain}/${name}/exists`);
-                    if (res.exists) {
-                        elements.mailboxCheckMessage.textContent = "Mailbox already exists.";
-                        elements.newMailboxNameInput.classList.add('error');
-                    } else {
-                        elements.mailboxCheckMessage.textContent = "Mailbox name is available.";
-                        elements.newMailboxNameInput.classList.add('success');
-                    }
-                } catch (error) {
-                    elements.mailboxCheckMessage.textContent = "";
-                }
-            }
-        }, 500);
     });
 
     function getUserDataFromRow(button) {

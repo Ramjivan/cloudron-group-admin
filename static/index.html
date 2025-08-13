@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+    <!-- Dashboard View -->
+    <div id="dashboard-view">
+        <header>
+            <h1 id="dashboard-title">User Management</h1>
+            <div>
+                <button id="add-new-btn">Add New...</button>
+            </div>
+        </header>
+
+        <main class="container">
+            <!-- User List -->
+            <div class="card">
+                <h3>Group Users</h3>
+                <table id="user-list">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Display Name</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <!-- Mailbox List -->
+            <div class="card">
+                <h3>Mailboxes</h3>
+                <table id="mailbox-list">
+                    <thead>
+                        <tr>
+                            <th>Address</th>
+                            <th>Owner</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </main>
+
+        <footer>
+            <p id="copyright"></p>
+        </footer>
+
+    <!-- Creation Modal -->
+    <div id="creation-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-btn" id="close-creation-modal">&times;</span>
+            <div class="tabs">
+                <button class="tab-link active" data-tab="add-user-tab">Add User</button>
+                <button class="tab-link" data-tab="add-mailbox-tab">Add Mailbox</button>
+            </div>
+
+            <!-- Add User Tab -->
+            <div id="add-user-tab" class="tab-content active">
+                <h3>Add New User</h3>
+                <form id="add-user-form">
+                    <input type="text" id="new-username" placeholder="Username" required>
+                    <input type="text" id="new-displayname" placeholder="Display Name" required>
+                    <input type="password" id="new-password-user" placeholder="Password" required>
+                    <input type="password" id="confirm-password-user" placeholder="Confirm Password" required>
+                    <input type="email" id="fallback-email" placeholder="Fallback/Recovery Email (Optional)">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="create-mailbox-checkbox" checked>
+                        <label for="create-mailbox-checkbox">Create default mailbox</label>
+                    </div>
+                    <div id="mailbox-name-wrapper">
+                        <input type="text" id="new-mailbox-name-user" placeholder="Mailbox name (defaults to username)">
+                    </div>
+                    <button type="submit">Create User</button>
+                    <p id="add-user-error" class="error-message"></p>
+                </form>
+            </div>
+
+            <!-- Add Mailbox Tab -->
+            <div id="add-mailbox-tab" class="tab-content">
+                <h3>Add New Mailbox</h3>
+                <form id="add-mailbox-form">
+                    <div class="email-field">
+                        <input type="text" id="new-mailbox-name" placeholder="Mailbox name" required>
+                        <span>@</span>
+                        <select id="new-mailbox-domain" required></select>
+                    </div>
+                    <select id="new-mailbox-owner" required>
+                        <option value="" disabled selected>Select owner</option>
+                    </select>
+                    <button type="submit">Create Mailbox</button>
+                    <p id="add-mailbox-error" class="error-message"></p>
+                    <p id="mailbox-check-message" class="info-message"></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Log Modal -->
+    <div id="log-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-btn" id="close-log-modal">&times;</span>
+            <div class="tabs">
+                <button class="tab-link active" data-tab="audit-log-tab">Audit Logs</button>
+                <button class="tab-link" data-tab="password-log-tab">Stored Passwords</button>
+            </div>
+            <div id="audit-log-tab" class="tab-content active">
+                <h2>Audit Logs</h2>
+                <div id="log-content"></div>
+            </div>
+            <div id="password-log-tab" class="tab-content">
+                <h2>Stored Passwords</h2>
+                <div id="password-log-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset Password Modal -->
+    <div id="reset-password-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-btn" id="close-reset-modal">&times;</span>
+            <h2>Set New Password</h2>
+            <p>Set a new password for the user directly.</p>
+            <div class="card">
+                <form id="set-password-form">
+                    <input type="password" id="new-password" placeholder="New Password" required>
+                    <input type="password" id="confirm-password" placeholder="Confirm Password" required>
+                    <button type="submit">Set Password</button>
+                    <p id="set-password-error" class="error-message"></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="/script.js"></script>
+</body>
+</html>

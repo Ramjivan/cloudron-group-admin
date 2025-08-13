@@ -1,0 +1,654 @@
+2025-08-13T18:34:14.022Z [INFO] Application starting...
+2025-08-13T18:34:14.024Z [INFO] Running pre-flight checks...
+2025-08-13T18:34:14.024Z [INFO] Verifying mail server status for each configured domain...
+2025-08-13T18:34:14.025Z [INFO] Constructed API URL: https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T18:34:14.025Z [DEBUG] Making API call with options: {}
+2025-08-13T18:34:14.333Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T18:34:14.333Z [INFO] Domain 'luxurydmc.travel' is configured correctly for mail.
+2025-08-13T18:34:14.334Z [INFO] Starting in development mode.
+2025-08-13T18:34:14.334Z [INFO] Server starting on http://localhost:8020
+2025-08-13T18:34:34.154Z [INFO] GET / - 200
+2025-08-13T18:34:34.168Z [INFO] GET /style.css - 200
+2025-08-13T18:34:34.171Z [INFO] GET /script.js - 200
+2025-08-13T18:34:34.219Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T18:34:34.219Z [INFO] Basic Auth successful for user: admin
+2025-08-13T18:34:34.219Z [INFO] Request received to list users.
+2025-08-13T18:34:34.219Z [INFO] No cached group ID. Fetching group info for "luxurydmc"...
+2025-08-13T18:34:34.219Z [INFO] Constructed API URL: https://my.luxurydmc.travel/api/v1/groups?search=luxurydmc
+2025-08-13T18:34:34.220Z [DEBUG] Making API call with options: {}
+2025-08-13T18:34:34.221Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T18:34:34.221Z [INFO] Basic Auth successful for user: admin
+2025-08-13T18:34:34.221Z [INFO] Constructed API URL: https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/mailboxes
+2025-08-13T18:34:34.222Z [DEBUG] Making API call with options: {}
+2025-08-13T18:34:34.222Z [INFO] Constructed API URL: https://my.luxurydmc.travel/api/v1/users
+2025-08-13T18:34:34.222Z [DEBUG] Making API call with options: {}
+2025-08-13T18:34:34.262Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/groups?search=luxurydmc
+2025-08-13T18:34:34.263Z [INFO] Managing users for group: luxurydmc (ID: gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3)
+2025-08-13T18:34:34.263Z [INFO] Constructed API URL: https://my.luxurydmc.travel/api/v1/users
+2025-08-13T18:34:34.263Z [DEBUG] Making API call with options: {}
+2025-08-13T18:34:34.263Z [INFO] Constructed API URL: https://my.luxurydmc.travel/api/v1/groups/gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3
+2025-08-13T18:34:34.264Z [DEBUG] Making API call with options: {}
+2025-08-13T18:34:34.308Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T18:34:34.310Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/mailboxes
+2025-08-13T18:34:34.311Z [INFO] Found 4 total mailboxes, returning 3 after exclusions.
+2025-08-13T18:34:34.311Z [INFO] GET /api/mailboxes - 200
+2025-08-13T18:34:34.314Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T18:34:34.314Z [INFO] Basic Auth successful for user: admin
+2025-08-13T18:34:34.315Z [INFO] Serving config with valid domains: {"domains":["luxurydmc.travel"],"brandName":"Streamway - Luxury Vacation "}
+2025-08-13T18:34:34.315Z [INFO] GET /api/config - 200
+2025-08-13T18:34:34.350Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/groups/gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3
+2025-08-13T18:34:34.350Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T18:34:34.351Z [INFO] Found 4 users in group, returning 3 after exclusions.
+2025-08-13T18:34:34.351Z [INFO] GET /api/users - 200
+2025-08-13T18:34:46.542Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T18:34:46.543Z [INFO] Basic Auth successful for user: admin
+2025-08-13T18:34:46.543Z [INFO] Request received to generate password reset for user ID: uid-ce2f9381-4db7-44b1-bf1a-fd44a18ccbc7
+2025-08-13T18:34:46.543Z [INFO] Constructed API URL: https://my.luxurydmc.travel/api/v1/users/uid-ce2f9381-4db7-44b1-bf1a-fd44a18ccbc7/password_reset_link
+2025-08-13T18:34:46.543Z [DEBUG] Making API call with options: {"method":"GET"}
+2025-08-13T18:34:46.590Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/users/uid-ce2f9381-4db7-44b1-bf1a-fd44a18ccbc7/password_reset_link
+2025-08-13T18:34:46.599Z [INFO] [AUDIT] Generated password reset link for user ID 'uid-ce2f9381-4db7-44b1-bf1a-fd44a18ccbc7'
+2025-08-13T18:34:46.600Z [INFO] Successfully generated password reset for user uid-ce2f9381-4db7-44b1-bf1a-fd44a18ccbc7.
+2025-08-13T18:34:46.600Z [INFO] POST /api/users/uid-ce2f9381-4db7-44b1-bf1a-fd44a18ccbc7/reset-password - 200
+2025-08-13T18:35:00.152Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T18:35:00.152Z [INFO] Basic Auth successful for user: admin
+2025-08-13T18:35:00.152Z [INFO] Request received to generate password reset for user ID: uid-ce2f9381-4db7-44b1-bf1a-fd44a18ccbc7
+2025-08-13T18:35:00.152Z [INFO] Constructed API URL: https://my.luxurydmc.travel/api/v1/users/uid-ce2f9381-4db7-44b1-bf1a-fd44a18ccbc7/password_reset_link
+2025-08-13T18:35:00.152Z [DEBUG] Making API call with options: {"method":"GET"}
+2025-08-13T18:35:00.200Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/users/uid-ce2f9381-4db7-44b1-bf1a-fd44a18ccbc7/password_reset_link
+2025-08-13T18:35:00.205Z [INFO] [AUDIT] Generated password reset link for user ID 'uid-ce2f9381-4db7-44b1-bf1a-fd44a18ccbc7'
+2025-08-13T18:35:00.206Z [INFO] Successfully generated password reset for user uid-ce2f9381-4db7-44b1-bf1a-fd44a18ccbc7.
+2025-08-13T18:35:00.206Z [INFO] POST /api/users/uid-ce2f9381-4db7-44b1-bf1a-fd44a18ccbc7/reset-password - 200
+2025-08-13T18:35:11.807Z [INFO] GET / - 200
+2025-08-13T18:35:11.821Z [INFO] GET /style.css - 200
+2025-08-13T18:35:11.823Z [INFO] GET /script.js - 200
+2025-08-13T18:35:11.866Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T18:35:11.867Z [INFO] Basic Auth successful for user: admin
+2025-08-13T18:35:11.867Z [INFO] Request received to list users.
+2025-08-13T18:35:11.867Z [INFO] Constructed API URL: https://my.luxurydmc.travel/api/v1/users
+2025-08-13T18:35:11.867Z [DEBUG] Making API call with options: {}
+2025-08-13T18:35:11.868Z [INFO] Constructed API URL: https://my.luxurydmc.travel/api/v1/groups/gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3
+2025-08-13T18:35:11.868Z [DEBUG] Making API call with options: {}
+2025-08-13T18:35:11.870Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T18:35:11.870Z [INFO] Basic Auth successful for user: admin
+2025-08-13T18:35:11.870Z [INFO] Constructed API URL: https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/mailboxes
+2025-08-13T18:35:11.871Z [DEBUG] Making API call with options: {}
+2025-08-13T18:35:11.871Z [INFO] Constructed API URL: https://my.luxurydmc.travel/api/v1/users
+2025-08-13T18:35:11.871Z [DEBUG] Making API call with options: {}
+2025-08-13T18:35:11.872Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T18:35:11.872Z [INFO] Basic Auth successful for user: admin
+2025-08-13T18:35:11.872Z [INFO] Serving config with valid domains: {"domains":["luxurydmc.travel"],"brandName":"Streamway - Luxury Vacation "}
+2025-08-13T18:35:11.873Z [INFO] GET /api/config - 200
+2025-08-13T18:35:11.912Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/groups/gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3
+2025-08-13T18:35:11.913Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T18:35:11.913Z [INFO] Found 4 users in group, returning 3 after exclusions.
+2025-08-13T18:35:11.914Z [INFO] GET /api/users - 200
+2025-08-13T18:35:11.962Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/mailboxes
+2025-08-13T18:35:11.963Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T18:35:11.963Z [INFO] Found 4 total mailboxes, returning 3 after exclusions.
+2025-08-13T18:35:11.964Z [INFO] GET /api/mailboxes - 200
+2025-08-13T18:35:16.242Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T18:35:16.243Z [INFO] Basic Auth successful for user: admin
+2025-08-13T18:35:16.243Z [INFO] Request received to generate password reset for user ID: uid-ce2f9381-4db7-44b1-bf1a-fd44a18ccbc7
+2025-08-13T18:35:16.243Z [INFO] Constructed API URL: https://my.luxurydmc.travel/api/v1/users/uid-ce2f9381-4db7-44b1-bf1a-fd44a18ccbc7/password_reset_link
+2025-08-13T18:35:16.243Z [DEBUG] Making API call with options: {"method":"GET"}
+2025-08-13T18:35:16.288Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/users/uid-ce2f9381-4db7-44b1-bf1a-fd44a18ccbc7/password_reset_link
+2025-08-13T18:35:16.296Z [INFO] [AUDIT] Generated password reset link for user ID 'uid-ce2f9381-4db7-44b1-bf1a-fd44a18ccbc7'
+2025-08-13T18:35:16.296Z [INFO] Successfully generated password reset for user uid-ce2f9381-4db7-44b1-bf1a-fd44a18ccbc7.
+2025-08-13T18:35:16.296Z [INFO] POST /api/users/uid-ce2f9381-4db7-44b1-bf1a-fd44a18ccbc7/reset-password - 200
+2025-08-13T18:35:50.487Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T18:35:50.487Z [INFO] Basic Auth successful for user: admin
+2025-08-13T18:35:50.488Z [INFO] Constructed API URL: https://my.luxurydmc.travel/api/v1/users/uid-ce2f9381-4db7-44b1-bf1a-fd44a18ccbc7/password
+2025-08-13T18:35:50.488Z [DEBUG] Making API call with options: {"method":"POST","body":"{\"password\":\"testtest\"}"}
+2025-08-13T18:35:50.613Z [DEBUG] API call successful: POST https://my.luxurydmc.travel/api/v1/users/uid-ce2f9381-4db7-44b1-bf1a-fd44a18ccbc7/password
+2025-08-13T18:35:50.626Z [INFO] [AUDIT] Set password for user with ID 'uid-ce2f9381-4db7-44b1-bf1a-fd44a18ccbc7'
+2025-08-13T18:35:50.636Z [INFO] [AUDIT] Stored password for user marketing
+2025-08-13T18:35:50.636Z [INFO] Successfully set password for user uid-ce2f9381-4db7-44b1-bf1a-fd44a18ccbc7.
+2025-08-13T18:35:50.637Z [INFO] POST /api/users/uid-ce2f9381-4db7-44b1-bf1a-fd44a18ccbc7/password - 200
+2025-08-13T18:36:45.718Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T18:36:45.718Z [INFO] Basic Auth successful for user: admin
+2025-08-13T18:36:45.718Z [INFO] Request received to view stored passwords.
+2025-08-13T18:36:45.718Z [INFO] Retrieving stored passwords from KV store.
+2025-08-13T18:36:45.722Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T18:36:45.723Z [INFO] Basic Auth successful for user: admin
+2025-08-13T18:36:45.723Z [INFO] Request received to view audit logs.
+2025-08-13T18:36:45.723Z [INFO] Retrieving audit logs from KV store.
+2025-08-13T18:36:45.730Z [INFO] Retrieved 1 stored passwords.
+2025-08-13T18:36:45.731Z [INFO] GET /api/logs/passwords - 200
+2025-08-13T18:36:45.761Z [INFO] Retrieved 34 audit log entries.
+2025-08-13T18:36:45.761Z [INFO] GET /api/logs - 200
+2025-08-13T18:43:30.287Z [INFO] GET / - 200
+2025-08-13T18:43:30.300Z [INFO] GET /style.css - 200
+2025-08-13T18:43:30.301Z [INFO] GET /script.js - 200
+2025-08-13T18:43:32.836Z [INFO] GET / - 200
+2025-08-13T18:43:32.849Z [INFO] GET /style.css - 200
+2025-08-13T18:43:32.850Z [INFO] GET /script.js - 200
+2025-08-13T18:43:50.095Z [INFO] Application starting...
+2025-08-13T18:43:50.096Z [INFO] Running pre-flight checks...
+2025-08-13T18:43:50.097Z [INFO] Verifying mail server status for each configured domain...
+2025-08-13T18:43:50.097Z [INFO] Constructed API URL: https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T18:43:50.097Z [DEBUG] Making API call with options: {}
+2025-08-13T18:43:50.597Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T18:43:50.598Z [INFO] Domain 'luxurydmc.travel' is configured correctly for mail.
+2025-08-13T18:43:50.599Z [INFO] Starting in development mode.
+2025-08-13T18:43:50.599Z [INFO] Server starting on http://localhost:8020
+2025-08-13T18:44:34.382Z [INFO] Application starting...
+2025-08-13T18:44:34.383Z [INFO] Running pre-flight checks...
+2025-08-13T18:44:34.384Z [INFO] Verifying mail server status for each configured domain...
+2025-08-13T18:44:34.384Z [INFO] Constructed API URL: https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T18:44:34.384Z [DEBUG] Making API call with options: {}
+2025-08-13T18:44:34.816Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T18:44:34.817Z [INFO] Domain 'luxurydmc.travel' is configured correctly for mail.
+2025-08-13T18:44:34.818Z [INFO] Starting in development mode.
+2025-08-13T18:44:34.818Z [INFO] Server starting on http://localhost:8020
+2025-08-13T18:45:50.086Z [INFO] GET / - 200
+2025-08-13T18:45:50.106Z [INFO] GET /script.js - 200
+2025-08-13T18:45:50.106Z [INFO] GET /style.css - 200
+2025-08-13T18:46:11.763Z [INFO] Application starting...
+2025-08-13T18:46:11.765Z [INFO] Running pre-flight checks...
+2025-08-13T18:46:11.766Z [INFO] Verifying mail server status for each configured domain...
+2025-08-13T18:46:11.766Z [INFO] Constructed API URL: https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T18:46:11.766Z [DEBUG] Making API call with options: {}
+2025-08-13T18:46:12.186Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T18:46:12.187Z [INFO] Domain 'luxurydmc.travel' is configured correctly for mail.
+2025-08-13T18:46:12.188Z [INFO] Starting in development mode.
+2025-08-13T18:46:12.188Z [INFO] Server starting on http://localhost:8020
+2025-08-13T18:46:16.175Z [INFO] GET / - 200
+2025-08-13T18:46:16.196Z [INFO] GET /style.css - 200
+2025-08-13T18:46:16.201Z [INFO] GET /script.js - 200
+2025-08-13T18:46:17.478Z [INFO] GET / - 200
+2025-08-13T18:46:17.490Z [INFO] GET /style.css - 200
+2025-08-13T18:46:17.492Z [INFO] GET /script.js - 200
+2025-08-13T18:47:20.410Z [INFO] GET / - 200
+2025-08-13T18:47:20.437Z [INFO] GET /style.css - 200
+2025-08-13T18:47:20.440Z [INFO] GET /script.js - 200
+2025-08-13T18:47:20.493Z [INFO] GET /favicon.ico - 404
+2025-08-13T18:47:29.215Z [INFO] GET / - 200
+2025-08-13T18:47:29.229Z [INFO] GET /style.css - 200
+2025-08-13T18:47:29.230Z [INFO] GET /script.js - 200
+2025-08-13T18:49:40.861Z [INFO] Application starting...
+2025-08-13T18:49:40.862Z [INFO] Running pre-flight checks...
+2025-08-13T18:49:40.863Z [INFO] Verifying mail server status for each configured domain...
+2025-08-13T18:49:40.864Z [INFO] Constructed API URL: https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T18:49:40.864Z [DEBUG] Making API call with options: {}
+2025-08-13T18:49:41.487Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T18:49:41.488Z [INFO] Domain 'luxurydmc.travel' is configured correctly for mail.
+2025-08-13T18:49:41.488Z [INFO] Starting in development mode.
+2025-08-13T18:49:41.489Z [INFO] Server starting on http://localhost:8020
+2025-08-13T18:50:06.278Z [INFO] GET / - 200
+2025-08-13T18:50:06.292Z [INFO] GET /style.css - 200
+2025-08-13T18:50:06.293Z [INFO] GET /script.js - 200
+2025-08-13T18:50:07.209Z [INFO] GET / - 200
+2025-08-13T18:50:07.222Z [INFO] GET /style.css - 200
+2025-08-13T18:50:07.222Z [INFO] GET /script.js - 200
+2025-08-13T18:50:07.854Z [INFO] GET / - 200
+2025-08-13T18:50:07.867Z [INFO] GET /style.css - 200
+2025-08-13T18:50:07.868Z [INFO] GET /script.js - 200
+2025-08-13T18:50:08.040Z [INFO] GET / - 200
+2025-08-13T18:50:08.057Z [INFO] GET /style.css - 200
+2025-08-13T18:50:08.059Z [INFO] GET /script.js - 200
+2025-08-13T18:50:29.087Z [INFO] Application starting...
+2025-08-13T18:50:29.088Z [INFO] Running pre-flight checks...
+2025-08-13T18:50:29.089Z [INFO] Verifying mail server status for each configured domain...
+2025-08-13T18:50:29.089Z [INFO] Constructed API URL: https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T18:50:29.090Z [DEBUG] Making API call with options: {}
+2025-08-13T18:50:29.441Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T18:50:29.442Z [INFO] Domain 'luxurydmc.travel' is configured correctly for mail.
+2025-08-13T18:50:29.443Z [INFO] Starting in development mode.
+2025-08-13T18:50:29.444Z [INFO] Server starting on http://localhost:8020
+2025-08-13T18:50:31.757Z [INFO] GET / - 200
+2025-08-13T18:50:31.774Z [INFO] GET /style.css - 200
+2025-08-13T18:50:31.778Z [INFO] GET /script.js - 200
+2025-08-13T18:50:32.942Z [INFO] GET / - 200
+2025-08-13T18:50:32.956Z [INFO] GET /style.css - 200
+2025-08-13T18:50:32.958Z [INFO] GET /script.js - 200
+2025-08-13T18:50:36.722Z [INFO] GET /style.css - 200
+2025-08-13T18:50:36.779Z [INFO] GET /.well-known/appspecific/com.chrome.devtools.json - 404
+2025-08-13T18:50:44.770Z [INFO] GET / - 200
+2025-08-13T18:50:44.788Z [INFO] GET /style.css - 200
+2025-08-13T18:50:44.791Z [INFO] GET /script.js - 200
+2025-08-13T18:50:44.817Z [INFO] GET /.well-known/appspecific/com.chrome.devtools.json - 404
+2025-08-13T19:00:49.002Z [INFO] Application starting...
+2025-08-13T19:00:49.003Z [INFO] Running pre-flight checks...
+2025-08-13T19:00:49.004Z [INFO] Verifying mail server status for each configured domain...
+2025-08-13T19:00:49.004Z [INFO] Constructed API URL: https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T19:00:49.004Z [DEBUG] Making API call with options: {}
+2025-08-13T19:00:49.568Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T19:00:49.569Z [INFO] Domain 'luxurydmc.travel' is configured correctly for mail.
+2025-08-13T19:00:49.570Z [INFO] Starting in development mode.
+2025-08-13T19:00:49.571Z [INFO] Server starting on http://localhost:8020
+2025-08-13T19:00:55.499Z [INFO] GET / - 200
+2025-08-13T19:00:55.518Z [INFO] GET /style.css - 200
+2025-08-13T19:00:55.521Z [INFO] GET /script.js - 200
+2025-08-13T19:04:43.403Z [INFO] Application starting...
+2025-08-13T19:04:43.404Z [INFO] Running pre-flight checks...
+2025-08-13T19:04:43.404Z [INFO] Verifying mail server status for each configured domain...
+2025-08-13T19:04:43.405Z [INFO] Constructed API URL: https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T19:04:43.405Z [DEBUG] Making API call with options: {}
+2025-08-13T19:04:43.956Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T19:04:43.957Z [INFO] Domain 'luxurydmc.travel' is configured correctly for mail.
+2025-08-13T19:04:43.957Z [INFO] Starting in development mode.
+2025-08-13T19:04:43.958Z [INFO] Server starting on http://localhost:8020
+2025-08-13T19:05:05.971Z [INFO] GET / - 200
+2025-08-13T19:05:05.989Z [INFO] GET /style.css - 200
+2025-08-13T19:05:05.989Z [INFO] GET /script.js - 200
+2025-08-13T19:05:06.993Z [INFO] GET / - 200
+2025-08-13T19:05:07.005Z [INFO] GET /style.css - 200
+2025-08-13T19:05:07.007Z [INFO] GET /script.js - 200
+2025-08-13T19:07:00.566Z [INFO] Application starting...
+2025-08-13T19:07:00.567Z [INFO] Running pre-flight checks...
+2025-08-13T19:07:00.568Z [INFO] Verifying mail server status for each configured domain...
+2025-08-13T19:07:00.568Z [INFO] Constructed API URL: https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T19:07:00.568Z [DEBUG] Making API call with options: {}
+2025-08-13T19:07:01.187Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T19:07:01.187Z [INFO] Domain 'luxurydmc.travel' is configured correctly for mail.
+2025-08-13T19:07:01.188Z [INFO] Starting in development mode.
+2025-08-13T19:07:01.189Z [INFO] Server starting on http://localhost:8020
+2025-08-13T19:08:15.732Z [INFO] GET / - 200
+2025-08-13T19:08:15.751Z [INFO] GET /style.css - 200
+2025-08-13T19:08:15.752Z [INFO] GET /script.js - 200
+2025-08-13T19:08:16.771Z [INFO] GET / - 200
+2025-08-13T19:08:16.784Z [INFO] GET /style.css - 200
+2025-08-13T19:08:16.786Z [INFO] GET /script.js - 200
+2025-08-13T19:10:22.174Z [INFO] Application starting...
+2025-08-13T19:10:22.175Z [INFO] Running pre-flight checks...
+2025-08-13T19:10:22.176Z [INFO] Verifying mail server status for each configured domain...
+2025-08-13T19:10:22.176Z [INFO] Constructed API URL: https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T19:10:22.176Z [DEBUG] Making API call with options: {}
+2025-08-13T19:10:22.536Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T19:10:22.537Z [INFO] Domain 'luxurydmc.travel' is configured correctly for mail.
+2025-08-13T19:10:22.537Z [INFO] Starting in development mode.
+2025-08-13T19:10:22.538Z [INFO] Server starting on http://localhost:8020
+2025-08-13T19:10:41.815Z [INFO] Application starting...
+2025-08-13T19:10:41.818Z [INFO] Running pre-flight checks...
+2025-08-13T19:10:41.819Z [INFO] Verifying mail server status for each configured domain...
+2025-08-13T19:10:41.820Z [INFO] Constructed API URL: https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T19:10:41.820Z [DEBUG] Making API call with options: {}
+2025-08-13T19:10:42.262Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T19:10:42.263Z [INFO] Domain 'luxurydmc.travel' is configured correctly for mail.
+2025-08-13T19:10:42.264Z [INFO] Starting in development mode.
+2025-08-13T19:10:42.265Z [INFO] Server starting on http://localhost:8020
+2025-08-13T19:10:45.973Z [INFO] GET / - 200
+2025-08-13T19:10:45.990Z [INFO] GET /style.css - 200
+2025-08-13T19:10:45.994Z [INFO] GET /script.js - 200
+2025-08-13T19:10:47.356Z [INFO] GET / - 200
+2025-08-13T19:10:47.369Z [INFO] GET /style.css - 200
+2025-08-13T19:10:47.369Z [INFO] GET /script.js - 200
+2025-08-13T19:12:56.891Z [INFO] Application starting...
+2025-08-13T19:12:56.892Z [INFO] Running pre-flight checks...
+2025-08-13T19:12:56.893Z [INFO] Verifying mail server status for each configured domain...
+2025-08-13T19:12:56.893Z [INFO] --- Initiating Cloudron API Call ---
+2025-08-13T19:12:56.893Z [INFO] Attempting to use CLOUDRON_API_URL: https://my.luxurydmc.travel,example.com
+2025-08-13T19:12:56.894Z [INFO] Attempting to use CLOUDRON_API_TOKEN: e03ee...
+2025-08-13T19:12:56.894Z [INFO] Making API call: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T19:12:57.689Z [INFO] API call to https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status completed with status: 200
+2025-08-13T19:12:57.690Z [DEBUG] API call successful.
+2025-08-13T19:12:57.691Z [INFO] --- Cloudron API Call Finished ---
+2025-08-13T19:12:57.692Z [INFO] Domain 'luxurydmc.travel' is configured correctly for mail.
+2025-08-13T19:12:57.692Z [INFO] Starting in development mode.
+2025-08-13T19:12:57.693Z [INFO] Server starting on http://localhost:8020
+2025-08-13T19:13:45.896Z [INFO] Application starting...
+2025-08-13T19:13:45.897Z [INFO] Running pre-flight checks...
+2025-08-13T19:13:45.897Z [INFO] Verifying mail server status for each configured domain...
+2025-08-13T19:13:45.898Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T19:13:46.234Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T19:13:46.234Z [INFO] Domain 'luxurydmc.travel' is configured correctly for mail.
+2025-08-13T19:13:46.235Z [INFO] Starting in development mode.
+2025-08-13T19:13:46.235Z [INFO] Server starting on http://localhost:8020
+2025-08-13T19:15:00.544Z [INFO] Application starting...
+2025-08-13T19:15:00.546Z [INFO] Running pre-flight checks...
+2025-08-13T19:15:00.547Z [INFO] Verifying mail server status for each configured domain...
+2025-08-13T19:15:00.547Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T19:15:01.019Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T19:15:01.020Z [INFO] Domain 'luxurydmc.travel' is configured correctly for mail.
+2025-08-13T19:15:01.020Z [INFO] Starting in development mode.
+2025-08-13T19:15:01.021Z [INFO] Server starting on http://localhost:8020
+2025-08-13T19:15:07.886Z [INFO] GET / - 200
+2025-08-13T19:15:07.905Z [INFO] GET /style.css - 200
+2025-08-13T19:15:07.909Z [INFO] GET /script.js - 200
+2025-08-13T19:15:10.572Z [INFO] GET / - 200
+2025-08-13T19:15:10.586Z [INFO] GET /style.css - 200
+2025-08-13T19:15:10.586Z [INFO] GET /script.js - 200
+2025-08-13T19:15:10.751Z [INFO] GET / - 200
+2025-08-13T19:15:10.763Z [INFO] GET /style.css - 200
+2025-08-13T19:15:10.764Z [INFO] GET /script.js - 200
+2025-08-13T19:15:12.501Z [INFO] GET / - 200
+2025-08-13T19:15:12.521Z [INFO] GET /style.css - 200
+2025-08-13T19:15:12.522Z [INFO] GET /script.js - 200
+2025-08-13T19:15:12.576Z [INFO] GET /favicon.ico - 404
+2025-08-13T19:18:13.727Z [INFO] Application starting...
+2025-08-13T19:18:13.729Z [INFO] Running pre-flight checks...
+2025-08-13T19:18:13.729Z [INFO] Verifying mail server status for each configured domain...
+2025-08-13T19:18:13.730Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T19:18:14.322Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T19:18:14.323Z [INFO] Domain 'luxurydmc.travel' is configured correctly for mail.
+2025-08-13T19:18:14.323Z [INFO] Starting in development mode.
+2025-08-13T19:18:14.324Z [INFO] Server starting on http://localhost:8020
+2025-08-13T19:18:20.383Z [INFO] GET / - 200
+2025-08-13T19:18:20.403Z [INFO] GET /style.css - 200
+2025-08-13T19:18:20.407Z [INFO] GET /script.js - 200
+2025-08-13T19:18:52.832Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:18:52.832Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:18:52.832Z [INFO] Request received to create a new user.
+2025-08-13T19:18:52.834Z [INFO] No cached group ID. Fetching group info for "luxurydmc"...
+2025-08-13T19:18:52.834Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/groups?search=luxurydmc
+2025-08-13T19:18:52.896Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/groups?search=luxurydmc
+2025-08-13T19:18:52.896Z [INFO] Managing users for group: luxurydmc (ID: gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3)
+2025-08-13T19:18:52.897Z [DEBUG] Making API call: POST https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:18:52.953Z [ERROR] API call failed: POST https://my.luxurydmc.travel/api/v1/users {"status":400,"body":"{\n  \"status\": \"Bad Request\",\n  \"message\": \"Password must be atleast 8 characters\"\n}"}
+2025-08-13T19:18:52.953Z [ERROR] Error creating user: {"message":"Failed to create user: Unknown error"}
+2025-08-13T19:18:52.954Z [INFO] POST /api/users - 500
+2025-08-13T19:19:18.292Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:19:18.292Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:19:18.292Z [INFO] Request received to create a new user.
+2025-08-13T19:19:18.293Z [DEBUG] Making API call: POST https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:19:18.427Z [DEBUG] API call successful: POST https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:19:18.441Z [INFO] [AUDIT] Created user 'test6' (ID: uid-8787fa83-66a9-4af4-99c4-ca2e58ccb09f)
+2025-08-13T19:19:18.446Z [INFO] [AUDIT] Stored password for user test6
+2025-08-13T19:19:18.446Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/groups/gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3
+2025-08-13T19:19:18.516Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/groups/gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3
+2025-08-13T19:19:18.517Z [DEBUG] Making API call: PUT https://my.luxurydmc.travel/api/v1/groups/gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3/members
+2025-08-13T19:19:18.595Z [DEBUG] API call successful: PUT https://my.luxurydmc.travel/api/v1/groups/gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3/members
+2025-08-13T19:19:18.609Z [INFO] [AUDIT] Added user 'test6' to group 'luxurydmc'
+2025-08-13T19:19:18.611Z [DEBUG] Making API call: POST https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/mailboxes
+2025-08-13T19:19:18.674Z [DEBUG] API call successful: POST https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/mailboxes
+2025-08-13T19:19:18.683Z [INFO] [AUDIT] Created default mailbox 'test6@luxurydmc.travel' for 'test6'
+2025-08-13T19:19:18.683Z [INFO] Successfully created user 'test6'.
+2025-08-13T19:19:18.684Z [INFO] POST /api/users - 201
+2025-08-13T19:19:18.692Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:19:18.692Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:19:18.693Z [INFO] Request received to list users.
+2025-08-13T19:19:18.693Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:19:18.694Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/groups/gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3
+2025-08-13T19:19:18.703Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:19:18.703Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:19:18.703Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/mailboxes
+2025-08-13T19:19:18.704Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:19:18.705Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:19:18.705Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:19:18.706Z [INFO] Serving config with valid domains: {"domains":["luxurydmc.travel"],"brandName":"Streamway"}
+2025-08-13T19:19:18.706Z [INFO] GET /api/config - 200
+2025-08-13T19:19:18.759Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/groups/gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3
+2025-08-13T19:19:18.761Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:19:18.765Z [INFO] Found 5 users in group, returning 4 after exclusions.
+2025-08-13T19:19:18.765Z [INFO] GET /api/users - 200
+2025-08-13T19:19:18.815Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:19:18.816Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/mailboxes
+2025-08-13T19:19:18.816Z [INFO] Found 5 total mailboxes, returning 4 after exclusions.
+2025-08-13T19:19:18.817Z [INFO] GET /api/mailboxes - 200
+2025-08-13T19:19:25.067Z [INFO] GET / - 200
+2025-08-13T19:19:25.083Z [INFO] GET /style.css - 200
+2025-08-13T19:19:25.084Z [INFO] GET /script.js - 200
+2025-08-13T19:22:38.137Z [INFO] GET /style.css - 200
+2025-08-13T19:22:38.165Z [INFO] GET /.well-known/appspecific/com.chrome.devtools.json - 404
+2025-08-13T19:22:42.443Z [INFO] GET / - 200
+2025-08-13T19:22:42.454Z [INFO] GET /style.css - 200
+2025-08-13T19:22:42.457Z [INFO] GET /script.js - 200
+2025-08-13T19:22:42.476Z [INFO] GET /.well-known/appspecific/com.chrome.devtools.json - 404
+2025-08-13T19:22:58.503Z [INFO] Application starting...
+2025-08-13T19:22:58.505Z [INFO] Running pre-flight checks...
+2025-08-13T19:22:58.506Z [INFO] Verifying mail server status for each configured domain...
+2025-08-13T19:22:58.507Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T19:22:58.825Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T19:22:58.826Z [INFO] Domain 'luxurydmc.travel' is configured correctly for mail.
+2025-08-13T19:22:58.826Z [INFO] Starting in development mode.
+2025-08-13T19:22:58.826Z [INFO] Server starting on http://localhost:8020
+2025-08-13T19:23:04.708Z [INFO] GET / - 200
+2025-08-13T19:23:04.744Z [INFO] GET /style.css - 200
+2025-08-13T19:23:04.747Z [INFO] GET /script.js - 200
+2025-08-13T19:23:04.757Z [INFO] GET /.well-known/appspecific/com.chrome.devtools.json - 404
+2025-08-13T19:24:06.559Z [INFO] GET / - 200
+2025-08-13T19:24:06.572Z [INFO] GET /style.css - 200
+2025-08-13T19:24:06.588Z [INFO] GET /script.js - 200
+2025-08-13T19:24:06.610Z [INFO] GET /.well-known/appspecific/com.chrome.devtools.json - 404
+2025-08-13T19:24:06.628Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:24:06.628Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:24:06.629Z [INFO] Request received to list users.
+2025-08-13T19:24:06.629Z [INFO] No cached group ID. Fetching group info for "luxurydmc"...
+2025-08-13T19:24:06.629Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/groups?search=luxurydmc
+2025-08-13T19:24:06.630Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:24:06.630Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:24:06.631Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/mailboxes
+2025-08-13T19:24:06.631Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:24:06.878Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/mailboxes
+2025-08-13T19:24:06.879Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:24:06.879Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/groups?search=luxurydmc
+2025-08-13T19:24:06.880Z [INFO] Managing users for group: luxurydmc (ID: gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3)
+2025-08-13T19:24:06.880Z [INFO] Found 5 total mailboxes, returning 4 after exclusions.
+2025-08-13T19:24:06.881Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:24:06.881Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/groups/gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3
+2025-08-13T19:24:06.881Z [INFO] GET /api/mailboxes - 200
+2025-08-13T19:24:06.884Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:24:06.884Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:24:06.885Z [INFO] Serving config with valid domains: {"domains":["luxurydmc.travel"],"brandName":"Streamway"}
+2025-08-13T19:24:06.885Z [INFO] GET /api/config - 200
+2025-08-13T19:24:06.979Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/groups/gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3
+2025-08-13T19:24:06.980Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:24:06.981Z [INFO] Found 5 users in group, returning 4 after exclusions.
+2025-08-13T19:24:06.981Z [INFO] GET /api/users - 200
+2025-08-13T19:24:43.625Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:24:43.625Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:24:43.626Z [DEBUG] Making API call: PUT https://my.luxurydmc.travel/api/v1/users/uid-8787fa83-66a9-4af4-99c4-ca2e58ccb09f/active
+2025-08-13T19:24:43.692Z [DEBUG] API call successful: PUT https://my.luxurydmc.travel/api/v1/users/uid-8787fa83-66a9-4af4-99c4-ca2e58ccb09f/active
+2025-08-13T19:24:43.701Z [INFO] [AUDIT] Disabled user with ID 'uid-8787fa83-66a9-4af4-99c4-ca2e58ccb09f'
+2025-08-13T19:24:43.701Z [INFO] Successfully disabledd user uid-8787fa83-66a9-4af4-99c4-ca2e58ccb09f.
+2025-08-13T19:24:43.701Z [INFO] PUT /api/users/uid-8787fa83-66a9-4af4-99c4-ca2e58ccb09f/active - 200
+2025-08-13T19:24:43.706Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:24:43.707Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:24:43.707Z [INFO] Request received to list users.
+2025-08-13T19:24:43.707Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:24:43.707Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/groups/gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3
+2025-08-13T19:24:43.708Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:24:43.708Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:24:43.708Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/mailboxes
+2025-08-13T19:24:43.708Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:24:43.709Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:24:43.709Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:24:43.709Z [INFO] Serving config with valid domains: {"domains":["luxurydmc.travel"],"brandName":"Streamway"}
+2025-08-13T19:24:43.709Z [INFO] GET /api/config - 200
+2025-08-13T19:24:43.755Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/groups/gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3
+2025-08-13T19:24:43.755Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:24:43.756Z [INFO] Found 5 users in group, returning 4 after exclusions.
+2025-08-13T19:24:43.756Z [INFO] GET /api/users - 200
+2025-08-13T19:24:43.803Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/mailboxes
+2025-08-13T19:24:43.804Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:24:43.805Z [INFO] Found 5 total mailboxes, returning 4 after exclusions.
+2025-08-13T19:24:43.805Z [INFO] GET /api/mailboxes - 200
+2025-08-13T19:25:03.628Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:25:03.628Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:25:03.628Z [INFO] Request received to delete user with ID: uid-8787fa83-66a9-4af4-99c4-ca2e58ccb09f
+2025-08-13T19:25:03.629Z [DEBUG] Making API call: DELETE https://my.luxurydmc.travel/api/v1/users/uid-8787fa83-66a9-4af4-99c4-ca2e58ccb09f
+2025-08-13T19:25:03.682Z [DEBUG] API call successful: DELETE https://my.luxurydmc.travel/api/v1/users/uid-8787fa83-66a9-4af4-99c4-ca2e58ccb09f
+2025-08-13T19:25:03.690Z [INFO] [AUDIT] Deleted user with ID 'uid-8787fa83-66a9-4af4-99c4-ca2e58ccb09f'
+2025-08-13T19:25:03.690Z [INFO] Successfully deleted user uid-8787fa83-66a9-4af4-99c4-ca2e58ccb09f.
+2025-08-13T19:25:03.690Z [INFO] DELETE /api/users/uid-8787fa83-66a9-4af4-99c4-ca2e58ccb09f - 200
+2025-08-13T19:25:03.694Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:25:03.694Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:25:03.694Z [INFO] Request received to list users.
+2025-08-13T19:25:03.694Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:25:03.695Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/groups/gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3
+2025-08-13T19:25:03.695Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:25:03.695Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:25:03.696Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/mailboxes
+2025-08-13T19:25:03.696Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:25:03.696Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:25:03.696Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:25:03.696Z [INFO] Serving config with valid domains: {"domains":["luxurydmc.travel"],"brandName":"Streamway"}
+2025-08-13T19:25:03.697Z [INFO] GET /api/config - 200
+2025-08-13T19:25:03.736Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:25:03.736Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/groups/gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3
+2025-08-13T19:25:03.736Z [INFO] Found 4 users in group, returning 3 after exclusions.
+2025-08-13T19:25:03.736Z [INFO] GET /api/users - 200
+2025-08-13T19:25:03.776Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/mailboxes
+2025-08-13T19:25:03.776Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:25:03.777Z [INFO] Found 5 total mailboxes, returning 3 after exclusions.
+2025-08-13T19:25:03.777Z [INFO] GET /api/mailboxes - 200
+2025-08-13T19:25:07.650Z [INFO] GET / - 200
+2025-08-13T19:25:07.661Z [INFO] GET /style.css - 200
+2025-08-13T19:25:07.662Z [INFO] GET /script.js - 200
+2025-08-13T19:25:07.710Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:25:07.710Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:25:07.710Z [INFO] Request received to list users.
+2025-08-13T19:25:07.711Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:25:07.711Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/groups/gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3
+2025-08-13T19:25:07.712Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:25:07.712Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:25:07.712Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/mailboxes
+2025-08-13T19:25:07.713Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:25:07.714Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:25:07.714Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:25:07.714Z [INFO] Serving config with valid domains: {"domains":["luxurydmc.travel"],"brandName":"Streamway"}
+2025-08-13T19:25:07.714Z [INFO] GET /api/config - 200
+2025-08-13T19:25:07.754Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/groups/gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3
+2025-08-13T19:25:07.756Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:25:07.756Z [INFO] Found 4 users in group, returning 3 after exclusions.
+2025-08-13T19:25:07.756Z [INFO] GET /api/users - 200
+2025-08-13T19:25:07.791Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/mailboxes
+2025-08-13T19:25:07.794Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:25:07.795Z [INFO] Found 5 total mailboxes, returning 3 after exclusions.
+2025-08-13T19:25:07.795Z [INFO] GET /api/mailboxes - 200
+2025-08-13T19:25:30.546Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:25:30.546Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:25:30.546Z [DEBUG] Making API call: POST https://my.luxurydmc.travel/api/v1/users/uid-2d0fa97d-64dc-48d5-b5d9-8e3e1eaabcb2/password
+2025-08-13T19:25:30.589Z [ERROR] API call failed: POST https://my.luxurydmc.travel/api/v1/users/uid-2d0fa97d-64dc-48d5-b5d9-8e3e1eaabcb2/password {"status":400,"body":"{\n  \"status\": \"Bad Request\",\n  \"message\": \"Password must be atleast 8 characters\"\n}"}
+2025-08-13T19:25:30.590Z [ERROR] Error setting password for user uid-2d0fa97d-64dc-48d5-b5d9-8e3e1eaabcb2: {"message":"Failed to set password"}
+2025-08-13T19:25:30.591Z [INFO] POST /api/users/uid-2d0fa97d-64dc-48d5-b5d9-8e3e1eaabcb2/password - 500
+2025-08-13T19:26:17.346Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:26:17.346Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:26:17.346Z [DEBUG] Making API call: POST https://my.luxurydmc.travel/api/v1/users/uid-2d0fa97d-64dc-48d5-b5d9-8e3e1eaabcb2/password
+2025-08-13T19:26:17.467Z [DEBUG] API call successful: POST https://my.luxurydmc.travel/api/v1/users/uid-2d0fa97d-64dc-48d5-b5d9-8e3e1eaabcb2/password
+2025-08-13T19:26:17.479Z [INFO] [AUDIT] Set password for user with ID 'uid-2d0fa97d-64dc-48d5-b5d9-8e3e1eaabcb2'
+2025-08-13T19:26:17.487Z [INFO] [AUDIT] Stored password for user test11
+2025-08-13T19:26:17.487Z [INFO] Successfully set password for user uid-2d0fa97d-64dc-48d5-b5d9-8e3e1eaabcb2.
+2025-08-13T19:26:17.488Z [INFO] POST /api/users/uid-2d0fa97d-64dc-48d5-b5d9-8e3e1eaabcb2/password - 200
+2025-08-13T19:26:25.493Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:26:25.493Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:26:25.494Z [DEBUG] Making API call: PUT https://my.luxurydmc.travel/api/v1/users/uid-2d0fa97d-64dc-48d5-b5d9-8e3e1eaabcb2/active
+2025-08-13T19:26:25.547Z [DEBUG] API call successful: PUT https://my.luxurydmc.travel/api/v1/users/uid-2d0fa97d-64dc-48d5-b5d9-8e3e1eaabcb2/active
+2025-08-13T19:26:25.554Z [INFO] [AUDIT] Disabled user with ID 'uid-2d0fa97d-64dc-48d5-b5d9-8e3e1eaabcb2'
+2025-08-13T19:26:25.554Z [INFO] Successfully disabledd user uid-2d0fa97d-64dc-48d5-b5d9-8e3e1eaabcb2.
+2025-08-13T19:26:25.554Z [INFO] PUT /api/users/uid-2d0fa97d-64dc-48d5-b5d9-8e3e1eaabcb2/active - 200
+2025-08-13T19:26:25.557Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:26:25.558Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:26:25.558Z [INFO] Request received to list users.
+2025-08-13T19:26:25.558Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:26:25.558Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/groups/gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3
+2025-08-13T19:26:25.559Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:26:25.559Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:26:25.559Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/mailboxes
+2025-08-13T19:26:25.559Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:26:25.559Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:26:25.560Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:26:25.560Z [INFO] Serving config with valid domains: {"domains":["luxurydmc.travel"],"brandName":"Streamway"}
+2025-08-13T19:26:25.560Z [INFO] GET /api/config - 200
+2025-08-13T19:26:25.597Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:26:25.597Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/groups/gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3
+2025-08-13T19:26:25.598Z [INFO] Found 4 users in group, returning 3 after exclusions.
+2025-08-13T19:26:25.598Z [INFO] GET /api/users - 200
+2025-08-13T19:26:25.642Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/mailboxes
+2025-08-13T19:26:25.642Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:26:25.642Z [INFO] Found 5 total mailboxes, returning 3 after exclusions.
+2025-08-13T19:26:25.642Z [INFO] GET /api/mailboxes - 200
+2025-08-13T19:27:14.246Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:27:14.246Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:27:14.246Z [DEBUG] Making API call: PUT https://my.luxurydmc.travel/api/v1/users/uid-2d0fa97d-64dc-48d5-b5d9-8e3e1eaabcb2/active
+2025-08-13T19:27:14.296Z [DEBUG] API call successful: PUT https://my.luxurydmc.travel/api/v1/users/uid-2d0fa97d-64dc-48d5-b5d9-8e3e1eaabcb2/active
+2025-08-13T19:27:14.303Z [INFO] [AUDIT] Enabled user with ID 'uid-2d0fa97d-64dc-48d5-b5d9-8e3e1eaabcb2'
+2025-08-13T19:27:14.303Z [INFO] Successfully enabledd user uid-2d0fa97d-64dc-48d5-b5d9-8e3e1eaabcb2.
+2025-08-13T19:27:14.303Z [INFO] PUT /api/users/uid-2d0fa97d-64dc-48d5-b5d9-8e3e1eaabcb2/active - 200
+2025-08-13T19:27:14.307Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:27:14.307Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:27:14.307Z [INFO] Request received to list users.
+2025-08-13T19:27:14.307Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:27:14.307Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/groups/gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3
+2025-08-13T19:27:14.309Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:27:14.309Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:27:14.309Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/mailboxes
+2025-08-13T19:27:14.309Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:27:14.310Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:27:14.310Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:27:14.310Z [INFO] Serving config with valid domains: {"domains":["luxurydmc.travel"],"brandName":"Streamway"}
+2025-08-13T19:27:14.310Z [INFO] GET /api/config - 200
+2025-08-13T19:27:14.350Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:27:14.353Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/groups/gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3
+2025-08-13T19:27:14.353Z [INFO] Found 4 users in group, returning 3 after exclusions.
+2025-08-13T19:27:14.353Z [INFO] GET /api/users - 200
+2025-08-13T19:27:14.392Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/mailboxes
+2025-08-13T19:27:14.393Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:27:14.393Z [INFO] Found 5 total mailboxes, returning 3 after exclusions.
+2025-08-13T19:27:14.393Z [INFO] GET /api/mailboxes - 200
+2025-08-13T19:31:42.489Z [INFO] Application starting...
+2025-08-13T19:31:42.492Z [INFO] Running pre-flight checks...
+2025-08-13T19:31:42.492Z [INFO] Verifying mail server status for each configured domain...
+2025-08-13T19:31:42.493Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T19:31:43.067Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/status
+2025-08-13T19:31:43.067Z [INFO] Domain 'luxurydmc.travel' is configured correctly for mail.
+2025-08-13T19:31:43.068Z [INFO] Starting in development mode.
+2025-08-13T19:31:43.069Z [INFO] Server starting on http://localhost:8020
+2025-08-13T19:31:46.780Z [INFO] GET / - 200
+2025-08-13T19:31:46.798Z [INFO] GET /style.css - 200
+2025-08-13T19:31:46.801Z [INFO] GET /script.js - 200
+2025-08-13T19:31:52.786Z [INFO] GET /style.css - 200
+2025-08-13T19:31:52.818Z [INFO] GET /.well-known/appspecific/com.chrome.devtools.json - 404
+2025-08-13T19:31:54.975Z [INFO] GET / - 200
+2025-08-13T19:31:54.986Z [INFO] GET /style.css - 200
+2025-08-13T19:31:54.990Z [INFO] GET /script.js - 200
+2025-08-13T19:31:55.008Z [INFO] GET /.well-known/appspecific/com.chrome.devtools.json - 404
+2025-08-13T19:31:57.082Z [INFO] GET / - 200
+2025-08-13T19:31:57.101Z [INFO] GET /style.css - 200
+2025-08-13T19:31:57.104Z [INFO] GET /script.js - 200
+2025-08-13T19:31:57.115Z [INFO] GET /.well-known/appspecific/com.chrome.devtools.json - 404
+2025-08-13T19:32:06.702Z [INFO] GET / - 200
+2025-08-13T19:32:06.714Z [INFO] GET /style.css - 200
+2025-08-13T19:32:06.716Z [INFO] GET /script.js - 200
+2025-08-13T19:35:06.090Z [INFO] GET / - 200
+2025-08-13T19:35:06.105Z [INFO] GET /style.css - 200
+2025-08-13T19:35:06.107Z [INFO] GET /script.js - 200
+2025-08-13T19:35:06.156Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:35:06.156Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:35:06.157Z [INFO] Request received to list users.
+2025-08-13T19:35:06.157Z [INFO] No cached group ID. Fetching group info for "luxurydmc"...
+2025-08-13T19:35:06.157Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/groups?search=luxurydmc
+2025-08-13T19:35:06.159Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:35:06.159Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:35:06.160Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/mailboxes
+2025-08-13T19:35:06.160Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:35:06.476Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:35:06.476Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:35:06.477Z [INFO] Serving config with valid domains: {"domains":["luxurydmc.travel"],"brandName":"Streamway"}
+2025-08-13T19:35:06.478Z [INFO] GET /api/config - 200
+2025-08-13T19:35:06.650Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:35:06.653Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/groups?search=luxurydmc
+2025-08-13T19:35:06.653Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/mailboxes
+2025-08-13T19:35:06.654Z [INFO] Managing users for group: luxurydmc (ID: gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3)
+2025-08-13T19:35:06.654Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:35:06.655Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/groups/gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3
+2025-08-13T19:35:06.656Z [INFO] Found 5 total mailboxes, returning 3 after exclusions.
+2025-08-13T19:35:06.657Z [INFO] GET /api/mailboxes - 200
+2025-08-13T19:35:06.814Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:35:06.814Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/groups/gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3
+2025-08-13T19:35:06.815Z [INFO] Found 4 users in group, returning 3 after exclusions.
+2025-08-13T19:35:06.816Z [INFO] GET /api/users - 200
+2025-08-13T19:35:07.034Z [INFO] GET / - 200
+2025-08-13T19:35:07.047Z [INFO] GET /style.css - 200
+2025-08-13T19:35:07.048Z [INFO] GET /script.js - 200
+2025-08-13T19:35:07.096Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:35:07.096Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:35:07.096Z [INFO] Request received to list users.
+2025-08-13T19:35:07.097Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:35:07.097Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/groups/gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3
+2025-08-13T19:35:07.098Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:35:07.099Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:35:07.099Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/mailboxes
+2025-08-13T19:35:07.099Z [DEBUG] Making API call: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:35:07.100Z [DEBUG] Basic Auth attempt for user: admin
+2025-08-13T19:35:07.100Z [INFO] Basic Auth successful for user: admin
+2025-08-13T19:35:07.100Z [INFO] Serving config with valid domains: {"domains":["luxurydmc.travel"],"brandName":"Streamway"}
+2025-08-13T19:35:07.101Z [INFO] GET /api/config - 200
+2025-08-13T19:35:07.171Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/groups/gid-5d8b1201-3e87-415f-ab4c-66bf5ed523f3
+2025-08-13T19:35:07.171Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:35:07.172Z [INFO] Found 4 users in group, returning 3 after exclusions.
+2025-08-13T19:35:07.172Z [INFO] GET /api/users - 200
+2025-08-13T19:35:07.238Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/mail/luxurydmc.travel/mailboxes
+2025-08-13T19:35:07.239Z [DEBUG] API call successful: GET https://my.luxurydmc.travel/api/v1/users
+2025-08-13T19:35:07.240Z [INFO] Found 5 total mailboxes, returning 3 after exclusions.
+2025-08-13T19:35:07.240Z [INFO] GET /api/mailboxes - 200

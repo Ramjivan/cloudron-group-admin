@@ -28,6 +28,7 @@
                             <th>Display Name</th>
                             <th>Email</th>
                             <th>Status</th>
+                            <th>Edit</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -70,9 +71,15 @@
                 <form id="add-user-form">
                     <input type="text" id="new-username" placeholder="Username" required>
                     <input type="text" id="new-displayname" placeholder="Display Name" required>
-                    <input type="password" id="new-password-user" placeholder="Password" required>
+                    <div class="password-wrapper">
+                        <input type="password" id="new-password-user" placeholder="Password" required>
+                        <button type="button" class="password-tool-btn view-password" data-target="new-password-user">👁️</button>
+                        <button type="button" class="password-tool-btn copy-password" data-target="new-password-user">📋</button>
+                        <button type="button" id="generate-password-add" class="secondary">Generate</button>
+                    </div>
                     <input type="password" id="confirm-password-user" placeholder="Confirm Password" required>
-                    <input type="email" id="fallback-email" placeholder="Fallback/Recovery Email (Optional)">
+                    <input type="email" id="new-primary-email" placeholder="Primary Email" required>
+                    <input type="email" id="recovery-email" placeholder="Recovery Email (Optional)">
                     <div class="checkbox-group">
                         <input type="checkbox" id="create-mailbox-checkbox" checked>
                         <label for="create-mailbox-checkbox">Create default mailbox</label>
@@ -105,6 +112,28 @@
         </div>
     </div>
 
+    <!-- Edit User Modal -->
+    <div id="edit-user-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-btn" id="close-edit-user-modal">&times;</span>
+            <h3>Edit User</h3>
+            <form id="edit-user-form">
+                <input type="hidden" id="edit-user-id">
+                <label for="edit-displayname">Display Name</label>
+                <input type="text" id="edit-displayname" required>
+                
+                <label for="edit-primary-email">Primary Email</label>
+                <input type="email" id="edit-primary-email" required>
+
+                <label for="edit-recovery-email">Recovery Email</label>
+                <input type="email" id="edit-recovery-email">
+
+                <button type="submit">Save Changes</button>
+                <p id="edit-user-error" class="error-message"></p>
+            </form>
+        </div>
+    </div>
+
     <!-- Log Modal -->
     <div id="log-modal" class="modal" style="display: none;">
         <div class="modal-content">
@@ -132,11 +161,29 @@
             <p>Set a new password for the user directly.</p>
             <div class="card">
                 <form id="set-password-form">
-                    <input type="password" id="new-password" placeholder="New Password" required>
+                    <div class="password-wrapper">
+                        <input type="password" id="new-password" placeholder="New Password" required>
+                        <button type="button" class="password-tool-btn view-password" data-target="new-password">👁️</button>
+                        <button type="button" class="password-tool-btn copy-password" data-target="new-password">📋</button>
+                        <button type="button" id="generate-password-reset" class="secondary">Generate</button>
+                    </div>
                     <input type="password" id="confirm-password" placeholder="Confirm Password" required>
                     <button type="submit">Set Password</button>
                     <p id="set-password-error" class="error-message"></p>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Password Modal -->
+    <div id="view-password-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-btn" id="close-view-password-modal">&times;</span>
+            <h2>User Password</h2>
+            <div class="card">
+                <p><strong>Username:</strong> <span id="view-password-username"></span></p>
+                <p><strong>Password:</strong> <span id="view-password-text"></span></p>
+                <button id="copy-viewed-password">Copy to Clipboard</button>
             </div>
         </div>
     </div>

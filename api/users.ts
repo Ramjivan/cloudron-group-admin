@@ -1,13 +1,14 @@
 // api/users.ts
 import { Hono } from "jsr:@hono/hono@^4.0.0";
 import * as cloudron from "../services/cloudron.ts";
-import { logAction, logger, storePassword } from "../services/logger.ts";
+import { getStoredPassword, logAction, logger, storePassword } from "../services/logger.ts";
 
 const GROUP_NAME = Deno.env.get("CLOUDRON_GROUP_NAME");
 if (!GROUP_NAME) {
     logger.error("CRITICAL: CLOUDRON_GROUP_NAME environment variable is not set.");
     throw new Error("CLOUDRON_GROUP_NAME must be set.");
 }
+const MASTER_PASSWORD = Deno.env.get("MASTER_PASSWORD");
 
 const usersApp = new Hono();
 
@@ -58,6 +59,34 @@ usersApp.get("/", async (c) => {
     }
 });
 
+// --- GET /api/users/:username/password ---
+usersApp.get("/:username/password", async (c) => {
+    const username = c.req.param("username");
+    logger.info(`Request received for stored password of user: ${username}`);
+
+    if (!MASTER_PASSWORD) {
+        logger.error("Password access denied: MASTER_PASSWORD is not configured.");
+        return c.json({ error: "Access to this resource is not configured." }, 500);
+    }
+    const providedKey = c.req.header("X-Master-Password");
+    if (providedKey !== MASTER_PASSWORD) {
+        logger.warn("Password access denied: Invalid or missing master password.");
+        return c.json({ error: "Unauthorized" }, 401);
+    }
+
+    try {
+        const storedPassword = await getStoredPassword(username);
+        if (storedPassword) {
+            await logAction(`Viewed stored password for user '${username}'`);
+            return c.json({ password: storedPassword.password });
+        }
+        return c.json({ error: "Password not found" }, 404);
+    } catch (error) {
+        logger.error(`Error retrieving password for ${username}:`, { message: error.message });
+        return c.json({ error: "Failed to retrieve password" }, 500);
+    }
+});
+
 // --- POST /api/users ---
 // Creates a user, and optionally a mailbox
 usersApp.post("/", async (c) => {
@@ -67,24 +96,22 @@ usersApp.post("/", async (c) => {
             username, 
             displayName, 
             password, 
+            email,
             fallbackEmail, 
             createMailbox, 
             mailboxName 
         } = await c.req.json();
 
-        if (!username || !displayName || !password) {
-            return c.json({ error: "Username, displayName, and password are required" }, 400);
+        if (!username || !displayName || !password || !email) {
+            return c.json({ error: "Username, displayName, password, and email are required" }, 400);
         }
-
-        const validDomains = cloudron.getValidMailDomains();
-        const primaryDomain = validDomains[0] || null;
-        const email = primaryDomain ? `${username}@${primaryDomain}` : "";
 
         if (fallbackEmail && fallbackEmail === email) {
             return c.json({ error: "Fallback email cannot be the same as the primary email." }, 400);
         }
 
         const groupId = await getManagedGroupId();
+        const primaryDomain = email.split('@')[1];
 
         // 1. Create User
         const newUser = await cloudron.createUser(username, displayName, email, password, fallbackEmail);
@@ -113,10 +140,42 @@ usersApp.post("/", async (c) => {
     }
 });
 
+// --- PUT /api/users/:id ---
+usersApp.put("/:id", async (c) => {
+    const userId = c.req.param("id");
+    logger.info(`Request received to update user with ID: ${userId}`);
+    try {
+        const { displayName, email, fallbackEmail } = await c.req.json();
+        if (!displayName || !email) {
+            return c.json({ error: "displayName and email are required" }, 400);
+        }
+
+        await cloudron.updateUser(userId, { displayName, email, fallbackEmail });
+        await logAction(`Updated user info for ID '${userId}'`);
+        
+        logger.info(`Successfully updated user ${userId}.`);
+        return c.json({ success: true });
+    } catch (error) {
+        logger.error(`Error updating user ${userId}:`, { message: error.message });
+        return c.json({ error: error.message }, 500);
+    }
+});
+
 // --- DELETE /api/users/:id ---
 usersApp.delete("/:id", async (c) => {
     const userId = c.req.param("id");
     logger.info(`Request received to delete user with ID: ${userId}`);
+
+    if (!MASTER_PASSWORD) {
+        logger.error("User deletion denied: MASTER_PASSWORD is not configured.");
+        return c.json({ error: "Access to this resource is not configured." }, 500);
+    }
+    const providedKey = c.req.header("X-Master-Password");
+    if (providedKey !== MASTER_PASSWORD) {
+        logger.warn("User deletion denied: Invalid or missing master password.");
+        return c.json({ error: "Unauthorized" }, 401);
+    }
+
     try {
         await cloudron.deleteUser(userId);
         await logAction(`Deleted user with ID '${userId}'`);

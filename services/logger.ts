@@ -130,3 +130,19 @@ export async function getStoredPasswords(): Promise<StoredPassword[]> {
     logger.info(`Retrieved ${sortedPasswords.length} stored passwords.`);
     return sortedPasswords;
 }
+
+/**
+ * Retrieves a single stored password from the KV store.
+ * @param username The username to retrieve the password for.
+ * @returns A promise that resolves to the stored password object or null if not found.
+ */
+export async function getStoredPassword(username: string): Promise<StoredPassword | null> {
+    logger.info(`Retrieving stored password for user: ${username}`);
+    const entry = await kv.get<StoredPassword>(["passwords", username]);
+    if (entry.value) {
+        logger.info(`Found stored password for user ${username}.`);
+        return entry.value;
+    }
+    logger.warn(`No stored password found for user ${username}.`);
+    return null;
+}

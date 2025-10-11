@@ -1,0 +1,177 @@
+--- static/index.html
++++ static/index.html
+@@
+-                    <input type="password" id="confirm-password-user" placeholder="Confirm Password" required>
+-                    <input type="email" id="fallback-email" placeholder="Fallback/Recovery Email (Optional)">
++                    <input type="password" id="confirm-password-user" placeholder="Confirm Password" required>
++                    <input type="email" id="new-email" placeholder="Primary Email" required>
++                    <input type="email" id="fallback-email" placeholder="Fallback/Recovery Email (Optional)">
+@@
+-    <script src="/script.js"></script>
++    <!-- Edit User Modal -->
++    <div id="edit-user-modal" class="modal" style="display: none;">
++        <div class="modal-content">
++            <span class="close-btn" id="close-edit-modal">&times;</span>
++            <h2>Edit User</h2>
++            <form id="edit-user-form">
++                <input type="text" id="edit-displayname" placeholder="Display Name" required>
++                <input type="email" id="edit-email" placeholder="Primary Email" required>
++                <input type="email" id="edit-fallback-email" placeholder="Fallback/Recovery Email (Optional)">
++                <button type="submit">Save Changes</button>
++                <p id="edit-user-error" class="error-message"></p>
++            </form>
++        </div>
++    </div>
++    <script src="/script.js"></script>
+--- static/script.js
++++ static/script.js
+@@     const elements = {
+-        resetPasswordModal: document.getElementById("reset-password-modal"),
+-        closeResetModal: document.getElementById("close-reset-modal"),
++        resetPasswordModal: document.getElementById("reset-password-modal"),
++        closeResetModal: document.getElementById("close-reset-modal"),
++        // Edit User Modal & Form
++        editUserModal: document.getElementById("edit-user-modal"),
++        closeEditModal: document.getElementById("close-edit-modal"),
++        editUserForm: document.getElementById("edit-user-form"),
++        editUserError: document.getElementById("edit-user-error"),
+@@
+-        createMailboxCheckbox: document.getElementById("create-mailbox-checkbox"),
++        createMailboxCheckbox: document.getElementById("create-mailbox-checkbox"),
++        newEmailInput: document.getElementById("new-email"),
+@@ const renderUsers = (users) => {
+-        users.forEach(user => {
+-            const row = document.createElement("tr");
++        users.forEach(user => {
++            const row = document.createElement("tr");
++            row.dataset.fallbackEmail = user.fallbackEmail || "";
+@@
+-                    <button class="secondary reset-password-btn" data-id="${user.id}">Reset</button>
++                    <button class="secondary edit-btn" data-id="${user.id}">Edit</button>
++                    <button class="secondary reset-password-btn" data-id="${user.id}">Reset</button>
+@@ function getUserDataFromRow(button) {
+-    return {
+-        id: button.dataset.id,
+-        username: row.cells[0].textContent,
+-        email: row.cells[2].textContent,
+-    };
++    return {
++        id: button.dataset.id,
++        username: row.cells[0].textContent,
++        displayName: row.cells[1].textContent,
++        email: row.cells[2].textContent,
++        fallbackEmail: row.dataset.fallbackEmail || "",
++    };
+@@ elements.addUserForm.addEventListener("submit", async (e) => {
+-        const displayName = elements.newDisplayNameInput.value;
++        const displayName = elements.newDisplayNameInput.value;
++        const email = elements.newEmailInput.value;
+@@
+-        const fallbackEmail = document.getElementById('fallback-email').value;
++        const fallbackEmail = document.getElementById('fallback-email').value;
+@@
+-            body: JSON.stringify({
+-                    username, 
+-                    displayName, 
+-                    password, 
+-                    fallbackEmail, 
+-                    createMailbox, 
+-                    mailboxName 
+-                }),
++            body: JSON.stringify({
++                    username,
++                    displayName,
++                    email,
++                    fallbackEmail,
++                    createMailbox,
++                    mailboxName
++                }),
+@@ elements.userListBody.addEventListener("click", async (e) => {
+-        if (target.classList.contains("reset-password-btn")) {
++        if (target.classList.contains("edit-btn")) {
++            const userData = getUserDataFromRow(target);
++            if (!userData) return;
++            const modal = elements.editUserModal;
++            const closeBtn = elements.closeEditModal;
++            const form = elements.editUserForm;
++            const errorElem = elements.editUserError;
++
++            elements.editDisplayNameInput.value = userData.displayName;
++            elements.editEmailInput.value = userData.email;
++            elements.editFallbackEmailInput.value = userData.fallbackEmail;
++
++            modal.style.display = 'flex';
++            closeBtn.onclick = () => modal.style.display = 'none';
++            window.onclick = (event) => {
++                if (event.target === modal) {
++                    modal.style.display = 'none';
++                }
++            };
++
++            form.onsubmit = async (ev) => {
++                ev.preventDefault();
++                errorElem.textContent = '';
++                try {
++                    const newDisplayName = elements.editDisplayNameInput.value;
++                    const newEmail = elements.editEmailInput.value;
++                    const newFallback = elements.editFallbackEmailInput.value;
++                    await api(`/users/${userData.id}`, {
++                        method: 'PUT',
++                        body: JSON.stringify({ displayName: newDisplayName, email: newEmail, fallbackEmail: newFallback })
++                    });
++                    modal.style.display = 'none';
++                    fetchAndDisplayData();
++                } catch (err) {
++                    errorElem.textContent = `Error: ${err.message}`;
++                }
++            };
++            return;
++        }
++        if (target.classList.contains("reset-password-btn")) {
+--- services/cloudron.ts
++++ services/cloudron.ts
+@@
+-export async function listAllMailboxes() {
++export async function listAllMailboxes() {
+@@
+ }
++
++/**
++ * Update a user's displayName, primary email, and fallback/recovery email.
++ */
++export async function updateUser(userId: string, data: { displayName?: string; email?: string; fallbackEmail?: string; }) {
++    const res = await cloudronFetch(`/api/v1/users/${userId}`, {
++        method: "PUT",
++        body: JSON.stringify(data),
++    });
++    if (!res.ok) {
++        const error = await res.json().catch(() => ({ message: "Unknown error" }));
++        throw new Error(`Failed to update user: ${error.message}`);
++    }
++    return res.json();
++}
+--- api/users.ts
++++ api/users.ts
+@@ // --- POST /api/users/:id/password
+-});
++
++});
++// --- PUT /api/users/:id ---
++// Updates a user's display name, primary email, and fallback email
++usersApp.put("/:id", async (c) => {
++    const userId = c.req.param("id");
++    logger.info(`Request received to update user with ID: ${userId}`);
++    try {
++        const { displayName, email, fallbackEmail } = await c.req.json();
++        if (!displayName || !email) {
++            return c.json({ error: "displayName and email are required" }, 400);
++        }
++        const updatedUser = await cloudron.updateUser(userId, { displayName, email, fallbackEmail });
++        await logAction(`Updated user '${userId}' displayName='${displayName}', email='${email}', fallbackEmail='${fallbackEmail ?? ""}'`);
++        logger.info(`Successfully updated user ${userId}.`);
++        return c.json(updatedUser);
++    } catch (error) {
++        logger.error(`Error updating user ${userId}:`, { message: error.message });
++        return c.json({ error: error.message }, 500);
++    }
++});

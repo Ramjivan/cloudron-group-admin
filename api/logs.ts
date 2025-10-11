@@ -3,18 +3,18 @@ import { Hono } from "jsr:@hono/hono@^4.0.0";
 import { getLogs, getStoredPasswords, logger } from "../services/logger.ts";
 
 const logsApp = new Hono();
-const AUDIT_KEY = Deno.env.get("AUDIT_KEY");
+const MASTER_PASSWORD = Deno.env.get("MASTER_PASSWORD");
 
-// Middleware to check for the audit key
+// Middleware to check for the master password
 const auditAuth = async (c, next) => {
-    if (!AUDIT_KEY) {
-        logger.error("Audit log access denied: AUDIT_KEY is not configured on the server.");
+    if (!MASTER_PASSWORD) {
+        logger.error("Audit log access denied: MASTER_PASSWORD is not configured on the server.");
         return c.json({ error: "Access to this resource is not configured." }, 500);
     }
 
-    const providedKey = c.req.header("X-Audit-Key");
-    if (providedKey !== AUDIT_KEY) {
-        logger.warn("Audit log access denied: Invalid or missing audit key.");
+    const providedKey = c.req.header("X-Master-Password");
+    if (providedKey !== MASTER_PASSWORD) {
+        logger.warn("Audit log access denied: Invalid or missing master password.");
         return c.json({ error: "Unauthorized" }, 401);
     }
     await next();

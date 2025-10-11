@@ -101,6 +101,17 @@ export async function createUser(
     }
     return res.json();
 }
+export async function updateUser(userId: string, data: { displayName: string, email: string, fallbackEmail?: string }) {
+    const res = await cloudronFetch(`/api/v1/users/${userId}`, {
+        method: "PUT",
+        body: JSON.stringify(data),
+    });
+    if (!res.ok) {
+        const error = await res.json().catch(() => ({ message: "Unknown error" }));
+        throw new Error(`Failed to update user: ${error.message}`);
+    }
+    return res.json();
+}
 export async function deleteUser(userId: string) {
     const res = await cloudronFetch(`/api/v1/users/${userId}`, { method: "DELETE" });
     if (!res.ok) throw new Error("Failed to delete user");

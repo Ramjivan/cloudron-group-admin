@@ -29,6 +29,10 @@ document.addEventListener("DOMContentLoaded", () => {
         logContent: document.getElementById("log-content"),
         resetPasswordModal: document.getElementById("reset-password-modal"),
         closeResetModal: document.getElementById("close-reset-modal"),
+        editUserModal: document.getElementById("edit-user-modal"),
+        closeEditUserModal: document.getElementById("close-edit-user-modal"),
+        editUserForm: document.getElementById("edit-user-form"),
+        editUserError: document.getElementById("edit-user-error"),
         dashboardTitle: document.getElementById("dashboard-title"),
         copyright: document.getElementById("copyright"),
         // Modal Tabs
@@ -97,12 +101,17 @@ document.addEventListener("DOMContentLoaded", () => {
             const row = document.createElement("tr");
             const isActive = user.active !== false;
             row.style.opacity = isActive ? "1" : "0.5";
+            row.dataset.fallbackEmail = user.fallbackEmail || '';
             row.innerHTML = `
                 <td>${user.username}</td>
                 <td>${user.displayName}</td>
                 <td>${user.email}</td>
                 <td>${isActive ? 'Active' : 'Disabled'}</td>
                 <td>
+                    <button class="secondary edit-btn" data-id="${user.id}">Edit</button>
+                </td>
+                <td>
+                    <button class="secondary view-password-btn" data-id="${user.id}" data-username="${user.username}">View</button>
                     <button class="secondary reset-password-btn" data-id="${user.id}">Reset</button>
                     <button class="${isActive ? 'warning' : 'secondary'} disable-btn" data-id="${user.id}" data-active="${isActive}">${isActive ? 'Disable' : 'Enable'}</button>
                     <button class="danger delete-btn" data-id="${user.id}" data-username="${user.username}">Delete</button>
@@ -159,11 +168,64 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- Input Validation ---
     const validateInput = (e) => {
-        e.target.value = e.target.value.toLowerCase().replace(/[^a-z0-9]/g, '');
+        e.target.value = e.target.value.toLowerCase().replace(/[^a-z0-9.-]/g, '');
     };
     elements.newUsernameInput.addEventListener("input", validateInput);
     elements.newMailboxNameUserInput.addEventListener("input", validateInput);
     elements.newMailboxNameInput.addEventListener("input", validateInput);
+
+    const validatePassword = (password) => {
+        const errors = [];
+        if (password.length < 8) {
+            errors.push("Password must be at least 8 characters long.");
+        }
+        if (!/[a-z]/.test(password)) {
+            errors.push("Password must contain at least one lowercase letter.");
+        }
+        if (!/[A-Z]/.test(password)) {
+            errors.push("Password must contain at least one uppercase letter.");
+        }
+        if (!/[0-9]/.test(password)) {
+            errors.push("Password must contain at least one number.");
+        }
+        if (!/[^a-zA-Z0-9]/.test(password)) {
+            errors.push("Password must contain at least one special character.");
+        }
+        return {
+            isValid: errors.length === 0,
+            errors: errors,
+        };
+    };
+
+    const generateStrongPassword = () => {
+        const length = 16;
+        const lower = "abcdefghijklmnopqrstuvwxyz";
+        const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const numbers = "0123456789";
+        const special = "!@#$%^&*()_+-=[]{}|;:,.<>?";
+        const all = lower + upper + numbers + special;
+        let password = "";
+        password += lower[Math.floor(Math.random() * lower.length)];
+        password += upper[Math.floor(Math.random() * upper.length)];
+        password += numbers[Math.floor(Math.random() * numbers.length)];
+        password += special[Math.floor(Math.random() * special.length)];
+        for (let i = 4; i < length; i++) {
+            password += all[Math.floor(Math.random() * all.length)];
+        }
+        return password.split('').sort(() => 0.5 - Math.random()).join('');
+    };
+
+    document.getElementById("generate-password-add").addEventListener("click", () => {
+        const password = generateStrongPassword();
+        document.getElementById("new-password-user").value = password;
+        document.getElementById("confirm-password-user").value = password;
+    });
+
+    document.getElementById("generate-password-reset").addEventListener("click", () => {
+        const password = generateStrongPassword();
+        document.getElementById("new-password").value = password;
+        document.getElementById("confirm-password").value = password;
+    });
 
     // --- Event Listeners ---
     elements.addUserForm.addEventListener("submit", async (e) => {
@@ -173,12 +235,19 @@ document.addEventListener("DOMContentLoaded", () => {
         const displayName = elements.newDisplayNameInput.value;
         const password = document.getElementById('new-password-user').value;
         const confirmPassword = document.getElementById('confirm-password-user').value;
-        const fallbackEmail = document.getElementById('fallback-email').value;
+        const email = document.getElementById('new-primary-email').value;
+        const fallbackEmail = document.getElementById('recovery-email').value;
         const createMailbox = elements.createMailboxCheckbox.checked;
         const mailboxName = elements.newMailboxNameUserInput.value || username;
 
         if (password !== confirmPassword) {
             elements.addUserError.textContent = "Passwords do not match.";
+            return;
+        }
+
+        const passwordValidation = validatePassword(password);
+        if (!passwordValidation.isValid) {
+            elements.addUserError.innerHTML = passwordValidation.errors.join("<br>");
             return;
         }
 
@@ -189,6 +258,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     username, 
                     displayName, 
                     password, 
+                    email,
                     fallbackEmail, 
                     createMailbox, 
                     mailboxName 
@@ -245,7 +315,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         elements.mailboxCheckMessage.textContent = "Mailbox name is available.";
                         elements.newMailboxNameInput.classList.add('success');
                     }
-                } catch (error) {
+                } catch (_error) {
                     elements.mailboxCheckMessage.textContent = "";
                 }
             }
@@ -258,7 +328,9 @@ document.addEventListener("DOMContentLoaded", () => {
         return {
             id: button.dataset.id,
             username: row.cells[0].textContent,
+            displayName: row.cells[1].textContent,
             email: row.cells[2].textContent,
+            fallbackEmail: row.dataset.fallbackEmail,
         };
     }
 
@@ -291,7 +363,7 @@ document.addEventListener("DOMContentLoaded", () => {
             modal.style.display = 'flex';
 
             closeBtn.onclick = () => modal.style.display = 'none';
-            window.onclick = (event) => {
+            onclick = (event) => {
                 if (event.target === modal) {
                     modal.style.display = 'none';
                 }
@@ -304,6 +376,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (newPassword !== confirmPassword) {
                     setPasswordError.textContent = "Passwords do not match.";
+                    return;
+                }
+
+                const passwordValidation = validatePassword(newPassword);
+                if (!passwordValidation.isValid) {
+                    setPasswordError.innerHTML = passwordValidation.errors.join("<br>");
                     return;
                 }
 
@@ -322,6 +400,75 @@ document.addEventListener("DOMContentLoaded", () => {
                     setPasswordError.textContent = `Error: ${error.message}`;
                 }
             };
+        }
+        if (target.classList.contains("edit-btn")) {
+            const userData = getUserDataFromRow(target);
+            if (!userData) return;
+
+            document.getElementById('edit-user-id').value = userData.id;
+            document.getElementById('edit-displayname').value = userData.displayName;
+            document.getElementById('edit-primary-email').value = userData.email;
+            document.getElementById('edit-recovery-email').value = userData.fallbackEmail || '';
+            
+            elements.editUserModal.style.display = 'flex';
+        }
+
+        if (target.classList.contains("view-password-btn")) {
+            const username = target.dataset.username;
+            const key = prompt("Please enter the API key to view the password:");
+            if (key && username) {
+                try {
+                    const res = await api(`/users/${username}/password`, {
+                        headers: { "X-Audit-Key": key }
+                    });
+                    
+                    const viewPasswordModal = document.getElementById('view-password-modal');
+                    document.getElementById('view-password-username').textContent = username;
+                    document.getElementById('view-password-text').textContent = res.password;
+                    viewPasswordModal.style.display = 'flex';
+
+                } catch (error) {
+                    alert(`Error: ${error.message}`);
+                }
+            }
+        }
+    });
+
+    // --- Password Tool Event Listeners (View/Copy) ---
+    document.addEventListener('click', (e) => {
+        const target = e.target;
+
+        // Toggle password visibility
+        if (target.classList.contains('view-password')) {
+            const inputId = target.dataset.target;
+            const passwordInput = document.getElementById(inputId);
+            if (passwordInput) {
+                const isPassword = passwordInput.type === 'password';
+                passwordInput.type = isPassword ? 'text' : 'password';
+                target.textContent = isPassword ? '🙈' : '👁️';
+            }
+        }
+
+        // Copy password to clipboard
+        if (target.classList.contains('copy-password')) {
+            const inputId = target.dataset.target;
+            const passwordInput = document.getElementById(inputId);
+            if (passwordInput && passwordInput.value) {
+                navigator.clipboard.writeText(passwordInput.value)
+                    .then(() => alert('Password copied to clipboard!'))
+                    .catch(_err => alert('Failed to copy password.'));
+            } else {
+                alert('No password to copy.');
+            }
+        }
+    });
+
+    document.getElementById('copy-viewed-password').addEventListener('click', () => {
+        const passwordText = document.getElementById('view-password-text').textContent;
+        if (passwordText) {
+            navigator.clipboard.writeText(passwordText)
+                .then(() => alert('Password copied to clipboard!'))
+                .catch(_err => alert('Failed to copy password.'));
         }
     });
 
@@ -366,14 +513,40 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    elements.editUserForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        elements.editUserError.textContent = "";
+        const userId = document.getElementById('edit-user-id').value;
+        const displayName = document.getElementById('edit-displayname').value;
+        const email = document.getElementById('edit-primary-email').value;
+        const fallbackEmail = document.getElementById('edit-recovery-email').value;
+
+        try {
+            await api(`/users/${userId}`, {
+                method: "PUT",
+                body: JSON.stringify({ displayName, email, fallbackEmail }),
+            });
+            elements.editUserModal.style.display = "none";
+            fetchAndDisplayData();
+        } catch (error) {
+            elements.editUserError.textContent = `Error: ${error.message}`;
+        }
+    });
+
     const closeModal = (modal) => modal.style.display = "none";
+    const viewPasswordModal = document.getElementById('view-password-modal');
     elements.closeCreationModal.addEventListener("click", () => closeModal(elements.creationModal));
     elements.closeLogModal.addEventListener("click", () => closeModal(elements.logModal));
     elements.closeResetModal.addEventListener("click", () => closeModal(elements.resetPasswordModal));
-    window.addEventListener("click", (e) => {
+    elements.closeEditUserModal.addEventListener("click", () => closeModal(elements.editUserModal));
+    document.getElementById('close-view-password-modal').addEventListener('click', () => closeModal(viewPasswordModal));
+
+    addEventListener("click", (e) => {
         if (e.target === elements.creationModal) closeModal(elements.creationModal);
         if (e.target === elements.logModal) closeModal(elements.logModal);
         if (e.target === elements.resetPasswordModal) closeModal(elements.resetPasswordModal);
+        if (e.target === elements.editUserModal) closeModal(elements.editUserModal);
+        if (e.target === viewPasswordModal) closeModal(viewPasswordModal);
     });
 
     // --- Footer ---

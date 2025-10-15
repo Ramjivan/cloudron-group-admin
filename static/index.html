@@ -38,7 +38,7 @@
 
             <!-- Mailbox List -->
             <div class="card">
-                <h3>Mailboxes</h3>
+                <h3>All Mailboxes</h3>
                 <table id="mailbox-list">
                     <thead>
                         <tr>
@@ -104,6 +104,15 @@
                     <select id="new-mailbox-owner" required>
                         <option value="" disabled selected>Select owner</option>
                     </select>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="enable-storage-quota">
+                        <label for="enable-storage-quota">Set storage quota</label>
+                    </div>
+                    <div id="storage-quota-wrapper" style="display: none;">
+                        <label for="storage-quota-slider">Storage (GB): <span id="storage-quota-value">5</span></label>
+                        <input type="range" id="storage-quota-slider" min="1" max="100" value="5">
+                        <input type="number" id="storage-quota-input" min="1" max="100" value="5" class="storage-input">
+                    </div>
                     <button type="submit">Create Mailbox</button>
                     <p id="add-mailbox-error" class="error-message"></p>
                     <p id="mailbox-check-message" class="info-message"></p>

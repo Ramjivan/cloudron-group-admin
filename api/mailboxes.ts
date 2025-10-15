@@ -24,20 +24,32 @@ mailboxesApp.get("/", async (c) => {
         logger.info(`Found ${mailboxes.length} total mailboxes, returning ${filteredMailboxes.length} after exclusions.`);
         return c.json(filteredMailboxes);
     } catch (error) {
-        logger.error("Error listing mailboxes:", { message: error.message });
-        return c.json({ error: "Failed to list mailboxes" }, 500);
+        logger.error("Error listing all mailboxes:", { message: error.message });
+        return c.json({ error: "Failed to list all mailboxes" }, 500);
+    }
+});
+
+// GET /api/mailboxes/user/:userId - List all mailboxes for a specific user
+mailboxesApp.get("/user/:userId", async (c) => {
+    const userId = c.req.param("userId");
+    try {
+        const mailboxes = await cloudron.listMailboxesForUser(userId);
+        logger.info(`Found ${mailboxes.length} mailboxes for user ${userId}.`);
+        return c.json(mailboxes);
+    } catch (error) {
+        logger.error(`Error listing mailboxes for user ${userId}:`, { message: error.message });
+        return c.json({ error: "Failed to list mailboxes for user" }, 500);
     }
 });
 
 // POST /api/mailboxes - Create a new mailbox
 mailboxesApp.post("/", async (c) => {
     try {
-        const { name, domain, ownerId } = await c.req.json();
+        const { name, domain, ownerId, storageQuota } = await c.req.json();
         if (!name || !domain || !ownerId) {
             return c.json({ error: "name, domain, and ownerId are required" }, 400);
         }
-        // The ownerId is passed directly from the frontend select menu.
-        const newMailbox = await cloudron.createMailbox(domain, name, ownerId);
+        const newMailbox = await cloudron.createMailbox(domain, name, ownerId, storageQuota);
         await logAction(`Created mailbox '${name}@${domain}'`);
         return c.json(newMailbox, 201);
     } catch (error) {

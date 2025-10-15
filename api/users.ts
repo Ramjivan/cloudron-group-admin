@@ -64,16 +64,6 @@ usersApp.get("/:username/password", async (c) => {
     const username = c.req.param("username");
     logger.info(`Request received for stored password of user: ${username}`);
 
-    if (!MASTER_PASSWORD) {
-        logger.error("Password access denied: MASTER_PASSWORD is not configured.");
-        return c.json({ error: "Access to this resource is not configured." }, 500);
-    }
-    const providedKey = c.req.header("X-Master-Password");
-    if (providedKey !== MASTER_PASSWORD) {
-        logger.warn("Password access denied: Invalid or missing master password.");
-        return c.json({ error: "Unauthorized" }, 401);
-    }
-
     try {
         const storedPassword = await getStoredPassword(username);
         if (storedPassword) {

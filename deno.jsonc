@@ -1,5 +1,9 @@
 {
   "tasks": {
     "start": "deno run --allow-net --allow-read --allow-env --allow-write --unstable-kv main.ts"
+  },
+  "deploy": {
+    "org": "ramjivan",
+    "app": "cloudron-group-admin"
   }
 }

@@ -99,9 +99,12 @@ document.addEventListener("DOMContentLoaded", () => {
         elements.userListBody.innerHTML = "";
         users.forEach(user => {
             const row = document.createElement("tr");
+            row.classList.add("user-row");
             const isActive = user.active !== false;
             row.style.opacity = isActive ? "1" : "0.5";
             row.dataset.fallbackEmail = user.fallbackEmail || '';
+            row.dataset.userId = user.id;
+
             row.innerHTML = `
                 <td>${user.username}</td>
                 <td>${user.displayName}</td>
@@ -111,6 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <button class="secondary edit-btn" data-id="${user.id}">Edit</button>
                 </td>
                 <td>
+                    <button class="secondary view-mailboxes-btn" data-id="${user.id}">View Mailboxes</button>
                     <button class="secondary view-password-btn" data-id="${user.id}" data-username="${user.username}">View</button>
                     <button class="secondary reset-password-btn" data-id="${user.id}">Reset</button>
                     <button class="${isActive ? 'warning' : 'secondary'} disable-btn" data-id="${user.id}" data-active="${isActive}">${isActive ? 'Disable' : 'Enable'}</button>
@@ -118,6 +122,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 </td>
             `;
             elements.userListBody.appendChild(row);
+
+            const mailboxRow = document.createElement("tr");
+            mailboxRow.classList.add("mailbox-row");
+            mailboxRow.style.display = "none";
+            mailboxRow.innerHTML = `<td colspan="6"><div class="mailbox-container" id="mailbox-container-${user.id}"></div></td>`;
+            elements.userListBody.appendChild(mailboxRow);
         });
     };
 
@@ -278,10 +288,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const name = elements.newMailboxNameInput.value;
         const domain = elements.newMailboxDomainSelect.value;
         const ownerId = elements.newMailboxOwnerSelect.value;
+
+        const storageQuotaEnabled = document.getElementById("enable-storage-quota").checked;
+        const storageQuotaGB = document.getElementById("storage-quota-input").value;
+        const storageQuota = storageQuotaEnabled ? parseInt(storageQuotaGB) * 1024 * 1024 * 1024 : 0;
+
         try {
             await api("/mailboxes", {
                 method: "POST",
-                body: JSON.stringify({ name, domain, ownerId }),
+                body: JSON.stringify({ name, domain, ownerId, storageQuota }),
             });
             elements.addMailboxForm.reset();
             elements.creationModal.style.display = "none";
@@ -293,6 +308,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
     elements.createMailboxCheckbox.addEventListener("change", () => {
         elements.mailboxNameWrapper.style.display = elements.createMailboxCheckbox.checked ? "block" : "none";
+    });
+
+    const enableStorageQuotaCheckbox = document.getElementById("enable-storage-quota");
+    const storageQuotaWrapper = document.getElementById("storage-quota-wrapper");
+    const storageQuotaSlider = document.getElementById("storage-quota-slider");
+    const storageQuotaInput = document.getElementById("storage-quota-input");
+    const storageQuotaValue = document.getElementById("storage-quota-value");
+
+    enableStorageQuotaCheckbox.addEventListener("change", () => {
+        storageQuotaWrapper.style.display = enableStorageQuotaCheckbox.checked ? "block" : "none";
+    });
+
+    storageQuotaSlider.addEventListener("input", () => {
+        storageQuotaInput.value = storageQuotaSlider.value;
+        storageQuotaValue.textContent = storageQuotaSlider.value;
+    });
+
+    storageQuotaInput.addEventListener("input", () => {
+        storageQuotaSlider.value = storageQuotaInput.value;
+        storageQuotaValue.textContent = storageQuotaInput.value;
     });
 
     let debounceTimer;
@@ -413,6 +448,41 @@ document.addEventListener("DOMContentLoaded", () => {
             elements.editUserModal.style.display = 'flex';
         }
 
+        if (target.classList.contains("view-mailboxes-btn")) {
+            const mailboxRow = target.closest("tr").nextElementSibling;
+            const container = mailboxRow.querySelector(".mailbox-container");
+
+            if (mailboxRow.style.display === "none") {
+                mailboxRow.style.display = "table-row";
+                target.textContent = "Hide Mailboxes";
+                container.innerHTML = "<p>Loading...</p>";
+
+                try {
+                    const mailboxes = await api(`/mailboxes/user/${userId}`);
+                    if (mailboxes.length === 0) {
+                        container.innerHTML = "<p>No mailboxes found for this user.</p>";
+                    } else {
+                        container.innerHTML = `
+                            <ul>
+                                ${mailboxes.map(mbx => `
+                                    <li>
+                                        <span>${mbx.name}@${mbx.domain}</span>
+                                        <button class="danger delete-mailbox-btn" data-name="${mbx.name}" data-domain="${mbx.domain}">Delete</button>
+                                    </li>
+                                `).join("")}
+                            </ul>
+                        `;
+                    }
+                } catch (error) {
+                    container.innerHTML = `<p class="error-message">Error: ${error.message}</p>`;
+                }
+            } else {
+                mailboxRow.style.display = "none";
+                target.textContent = "View Mailboxes";
+                container.innerHTML = "";
+            }
+        }
+
         if (target.classList.contains("view-password-btn")) {
             const username = target.dataset.username;
             const key = prompt("Please enter the API key to view the password:");
@@ -478,8 +548,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const name = target.dataset.name;
             const domain = target.dataset.domain;
             if (confirm(`Delete mailbox '${name}@${domain}'?`)) {
-                try { await api(`/mailboxes/${domain}/${name}`, { method: "DELETE" }); fetchAndDisplayData(); } 
-                catch (error) { alert(`Error: ${error.message}`); }
+                try {
+                    await api(`/mailboxes/${domain}/${name}`, { method: "DELETE" });
+                    fetchAndDisplayData();
+                }
+                catch (error) {
+                    alert(`Error: ${error.message}`);
+                }
             }
         }
     });

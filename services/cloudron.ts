@@ -39,28 +39,14 @@ async function cloudronFetch(path: string, options: RequestInit = {}): Promise<R
 }
 
 export async function checkMailServerDomains() {
-    if (validMailDomains !== null) return;
     const configuredDomains = Deno.env.get("MAIL_DOMAINS")?.split(',').map(d => d.trim()).filter(Boolean) || [];
     if (configuredDomains.length === 0) {
         logger.warn("No mail domains configured. Mailbox features will be limited.");
         validMailDomains = [];
         return;
     }
-    logger.info("Verifying mail server status for each configured domain...");
-    const checkedDomains: string[] = [];
-    for (const domain of configuredDomains) {
-        const res = await cloudronFetch(`/api/v1/mail/${encodeURIComponent(domain)}/status`);
-        if (res.ok) {
-            logger.info(`Domain '${domain}' is configured correctly for mail.`);
-            checkedDomains.push(domain);
-        } else {
-            logger.warn(`The domain '${domain}' is not enabled for email services. It will be ignored.`);
-        }
-    }
-    validMailDomains = checkedDomains;
-    if (validMailDomains.length === 0) {
-        logger.error("CRITICAL: None of the configured mail domains are valid.");
-    }
+    validMailDomains = configuredDomains;
+    logger.info(`Using configured mail domains: ${validMailDomains.join(', ')}`);
 }
 
 export function getValidMailDomains(): string[] {
@@ -179,7 +165,7 @@ export async function addUserToGroup(groupId: string, newUserId: string) {
 }
 
 // --- Mailbox Management ---
-export async function createMailbox(domain: string, name: string, ownerId: string) {
+export async function createMailbox(domain: string, name: string, ownerId: string, storageQuota?: number) {
     const res = await cloudronFetch(`/api/v1/mail/${domain}/mailboxes`, {
         method: "POST",
         body: JSON.stringify({
@@ -187,7 +173,7 @@ export async function createMailbox(domain: string, name: string, ownerId: strin
             ownerId: ownerId,
             ownerType: "user",
             active: true,
-            storageQuota: 0,
+            storageQuota: storageQuota || 0,
             messagesQuota: 0,
         }),
     });
@@ -214,6 +200,7 @@ export async function getMailbox(domain: string, name: string) {
     return res.json();
 }
 export async function listAllMailboxes() {
+    await checkMailServerDomains();
     const domains = getValidMailDomains();
     let allMailboxes: any[] = [];
     for (const domain of domains) {
@@ -228,4 +215,9 @@ export async function listAllMailboxes() {
         }
     }
     return allMailboxes;
+}
+
+export async function listMailboxesForUser(userId: string) {
+    const allMailboxes = await listAllMailboxes();
+    return allMailboxes.filter(mbx => mbx.ownerId === userId);
 }

@@ -59,6 +59,12 @@ export async function getUsers() {
     if (!res.ok) throw new Error("Failed to fetch users");
     return res.json();
 }
+export async function getUserByUsername(username: string) {
+    const res = await cloudronFetch(`/api/v1/users?search=${encodeURIComponent(username)}`);
+    if (!res.ok) throw new Error("Failed to fetch user by username");
+    const { users } = await res.json();
+    return users.find((u: any) => u.username.toLowerCase() === username.toLowerCase());
+}
 export async function createUser(
     username: string, 
     displayName: string, 

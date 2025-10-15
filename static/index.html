@@ -70,6 +70,7 @@
                 <h3>Add New User</h3>
                 <form id="add-user-form">
                     <input type="text" id="new-username" placeholder="Username" required>
+                    <p id="username-check-message" class="info-message"></p>
                     <input type="text" id="new-displayname" placeholder="Display Name" required>
                     <div class="password-wrapper">
                         <input type="password" id="new-password-user" placeholder="Password" required>
@@ -85,9 +86,14 @@
                         <label for="create-mailbox-checkbox">Create default mailbox</label>
                     </div>
                     <div id="mailbox-name-wrapper">
-                        <input type="text" id="new-mailbox-name-user" placeholder="Mailbox name (defaults to username)">
+                        <div class="email-field">
+                            <input type="text" id="new-mailbox-name-user" placeholder="Mailbox name (defaults to username)">
+                            <span>@</span>
+                            <select id="new-mailbox-domain-user" required></select>
+                        </div>
                     </div>
-                    <button type="submit">Create User</button>
+                    <p id="mailbox-check-message-user" class="info-message"></p>
+                    <button type="submit" id="create-user-btn">Create User</button>
                     <p id="add-user-error" class="error-message"></p>
                 </form>
             </div>
@@ -101,6 +107,7 @@
                         <span>@</span>
                         <select id="new-mailbox-domain" required></select>
                     </div>
+                    <p id="mailbox-check-message" class="info-message"></p>
                     <select id="new-mailbox-owner" required>
                         <option value="" disabled selected>Select owner</option>
                     </select>
@@ -115,7 +122,6 @@
                     </div>
                     <button type="submit">Create Mailbox</button>
                     <p id="add-mailbox-error" class="error-message"></p>
-                    <p id="mailbox-check-message" class="info-message"></p>
                 </form>
             </div>
         </div>

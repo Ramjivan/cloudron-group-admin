@@ -59,21 +59,15 @@ usersApp.get("/", async (c) => {
     }
 });
 
-// --- GET /api/users/:username/password ---
-usersApp.get("/:username/password", async (c) => {
+// --- GET /api/users/:username/exists ---
+usersApp.get("/:username/exists", async (c) => {
     const username = c.req.param("username");
-    logger.info(`Request received for stored password of user: ${username}`);
-
     try {
-        const storedPassword = await getStoredPassword(username);
-        if (storedPassword) {
-            await logAction(`Viewed stored password for user '${username}'`);
-            return c.json({ password: storedPassword.password });
-        }
-        return c.json({ error: "Password not found" }, 404);
+        const user = await cloudron.getUserByUsername(username);
+        return c.json({ exists: !!user });
     } catch (error) {
-        logger.error(`Error retrieving password for ${username}:`, { message: error.message });
-        return c.json({ error: "Failed to retrieve password" }, 500);
+        logger.error(`Error checking if user '${username}' exists:`, { message: error.message });
+        return c.json({ error: "Failed to check user existence" }, 500);
     }
 });
 

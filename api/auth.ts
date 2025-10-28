@@ -5,6 +5,7 @@ import type { Context, Next } from "jsr:@hono/hono@^4.0.0";
 
 const DASHBOARD_USERNAME = Deno.env.get("DASHBOARD_USERNAME");
 const DASHBOARD_PASSWORD = Deno.env.get("DASHBOARD_PASSWORD");
+const MASTER_PASSWORD = Deno.env.get("MASTER_PASSWORD");
 
 if (!DASHBOARD_USERNAME || !DASHBOARD_PASSWORD) {
     logger.error("CRITICAL: DASHBOARD_USERNAME and DASHBOARD_PASSWORD must be set for Basic Auth.");
@@ -40,4 +41,21 @@ export const basicAuthMiddleware = async (c: Context, next: Next) => {
         logger.error("Auth failed: Could not decode credentials.", { error: e.message });
         return c.text("Unauthorized", 401, { "WWW-Authenticate": 'Basic realm="User Management"' });
     }
+};
+
+/**
+ * Middleware to check for the master password.
+ */
+export const masterPasswordAuth = async (c: Context, next: Next) => {
+    if (!MASTER_PASSWORD) {
+        logger.error("Action denied: MASTER_PASSWORD is not configured on the server.");
+        return c.json({ error: "This action is not configured." }, 500);
+    }
+
+    const providedKey = c.req.header("X-Master-Password");
+    if (providedKey !== MASTER_PASSWORD) {
+        logger.warn("Action denied: Invalid or missing master password.");
+        return c.json({ error: "Unauthorized" }, 401);
+    }
+    await next();
 };

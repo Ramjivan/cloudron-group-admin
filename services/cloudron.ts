@@ -91,17 +91,44 @@ export async function createUser(
         const error = await res.json().catch(() => ({ message: "Unknown error" }));
         throw new Error(`Failed to create user: ${error.message}`);
     }
-    return res.json();
+    const newUser = await res.json();
+
+    // Store the password in Deno KV
+    try {
+        const kv = await Deno.openKv();
+        await kv.set(["passwords", newUser.id], password);
+        logger.info(`Password for new user ${newUser.id} stored in KV.`);
+    } catch (error) {
+        logger.error(`Failed to store password for new user ${newUser.id} in KV:`, error);
+        // Even if KV fails, the user was created in Cloudron, so we don't re-throw.
+    }
+
+    return newUser;
 }
 export async function updateUser(userId: string, data: { displayName: string, email: string, fallbackEmail?: string }) {
-    const res = await cloudronFetch(`/api/v1/users/${userId}`, {
-        method: "PUT",
+    const res = await cloudronFetch(`/api/v1/users/${userId}/profile`, {
+        method: "POST",
         body: JSON.stringify(data),
     });
     if (!res.ok) {
-        const error = await res.json().catch(() => ({ message: "Unknown error" }));
-        throw new Error(`Failed to update user: ${error.message}`);
+        const errorBody = await res.text();
+        let errorMessage = errorBody;
+        try {
+            const errorJson = JSON.parse(errorBody);
+            errorMessage = errorJson.message || errorMessage;
+        } catch (e) {
+            // Not a JSON response, use the raw text.
+            logger.debug("API error response was not valid JSON.", { body: errorBody });
+        }
+        throw new Error(`Failed to update user: ${errorMessage}`);
     }
+    
+    // Handle empty response body for successful requests
+    const contentLength = res.headers.get("content-length");
+    if (!contentLength || contentLength === "0") {
+        return { success: true };
+    }
+    
     return res.json();
 }
 export async function deleteUser(userId: string) {
@@ -136,7 +163,29 @@ export async function setPassword(userId: string, password: string) {
         body: JSON.stringify({ password }),
     });
     if (!res.ok) throw new Error("Failed to set password");
+
+    // Store the password in Deno KV
+    try {
+        const kv = await Deno.openKv();
+        await kv.set(["passwords", userId], password);
+        logger.info(`Password for user ${userId} stored in KV.`);
+    } catch (error) {
+        logger.error(`Failed to store password for user ${userId} in KV:`, error);
+        // Decide if you want to throw an error here or just log it
+    }
+
     return { success: true };
+}
+
+export async function getPassword(userId: string): Promise<string | null> {
+    try {
+        const kv = await Deno.openKv();
+        const result = await kv.get<string>(["passwords", userId]);
+        return result.value;
+    } catch (error) {
+        logger.error(`Failed to retrieve password for user ${userId} from KV:`, error);
+        return null;
+    }
 }
 
 // --- Group Management ---

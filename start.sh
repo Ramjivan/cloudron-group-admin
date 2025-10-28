@@ -8,6 +8,7 @@
 # In production, Deno manages the port automatically.
 #
 
+# Port for the development server. Change this if needed.
 PORT=8020
 export APP_ENV=development
 
@@ -39,4 +40,4 @@ fi
 
 # Start the Deno application with all necessary permissions
 echo "Starting server in development mode with file watching..."
-deno run --allow-read --allow-net --allow-env --unstable-kv --allow-write --watch --reload main.ts
+deno task dev

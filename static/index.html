@@ -155,26 +155,32 @@
             <span class="close-btn" id="close-log-modal">&times;</span>
             <div class="tabs">
                 <button class="tab-link active" data-tab="audit-log-tab">Audit Logs</button>
-                <button class="tab-link" data-tab="password-log-tab">Stored Passwords</button>
             </div>
             <div id="audit-log-tab" class="tab-content active">
                 <h2>Audit Logs</h2>
                 <div id="log-content"></div>
             </div>
-            <div id="password-log-tab" class="tab-content">
-                <h2>Stored Passwords</h2>
-                <div id="password-log-content"></div>
-            </div>
         </div>
     </div>
 
-    <!-- Reset Password Modal -->
+    <!-- Manage Password Modal -->
     <div id="reset-password-modal" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="close-btn" id="close-reset-modal">&times;</span>
-            <h2>Set New Password</h2>
-            <p>Set a new password for the user directly.</p>
+            <h2>Manage Password</h2>
+            
+            <div id="existing-password-section" style="display: none;">
+                <h4>Existing Password</h4>
+                <p id="no-password-message" style="display: none;">No password stored. Set a password once to be able to view it here.</p>
+                <div class="password-wrapper" id="existing-password-wrapper">
+                    <input type="password" id="existing-password" readonly>
+                    <button type="button" class="password-tool-btn view-password" data-target="existing-password">👁️</button>
+                    <button type="button" class="password-tool-btn copy-password" data-target="existing-password">📋</button>
+                </div>
+            </div>
+
             <div class="card">
+                <h4>Set New Password</h4>
                 <form id="set-password-form">
                     <div class="password-wrapper">
                         <input type="password" id="new-password" placeholder="New Password" required>
@@ -190,18 +196,7 @@
         </div>
     </div>
 
-    <!-- View Password Modal -->
-    <div id="view-password-modal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <span class="close-btn" id="close-view-password-modal">&times;</span>
-            <h2>User Password</h2>
-            <div class="card">
-                <p><strong>Username:</strong> <span id="view-password-username"></span></p>
-                <p><strong>Password:</strong> <span id="view-password-text"></span></p>
-                <button id="copy-viewed-password">Copy to Clipboard</button>
-            </div>
-        </div>
-    </div>
+
 
     <script src="/script.js"></script>
 </body>

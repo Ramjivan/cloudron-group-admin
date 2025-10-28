@@ -1,7 +1,8 @@
 // api/users.ts
 import { Hono } from "jsr:@hono/hono@^4.0.0";
 import * as cloudron from "../services/cloudron.ts";
-import { getStoredPassword, logAction, logger, storePassword } from "../services/logger.ts";
+import { logAction, logger } from "../services/logger.ts";
+import { masterPasswordAuth } from "./auth.ts";
 
 const GROUP_NAME = Deno.env.get("CLOUDRON_GROUP_NAME");
 if (!GROUP_NAME) {
@@ -100,7 +101,6 @@ usersApp.post("/", async (c) => {
         // 1. Create User
         const newUser = await cloudron.createUser(username, displayName, email, password, fallbackEmail);
         await logAction(`Created user '${username}' (ID: ${newUser.id})`);
-        await storePassword(username, email, password);
 
         // 2. Add to Group
         await cloudron.addUserToGroup(groupId, newUser.id);
@@ -146,19 +146,9 @@ usersApp.put("/:id", async (c) => {
 });
 
 // --- DELETE /api/users/:id ---
-usersApp.delete("/:id", async (c) => {
+usersApp.delete("/:id", masterPasswordAuth, async (c) => {
     const userId = c.req.param("id");
     logger.info(`Request received to delete user with ID: ${userId}`);
-
-    if (!MASTER_PASSWORD) {
-        logger.error("User deletion denied: MASTER_PASSWORD is not configured.");
-        return c.json({ error: "Access to this resource is not configured." }, 500);
-    }
-    const providedKey = c.req.header("X-Master-Password");
-    if (providedKey !== MASTER_PASSWORD) {
-        logger.warn("User deletion denied: Invalid or missing master password.");
-        return c.json({ error: "Unauthorized" }, 401);
-    }
 
     try {
         await cloudron.deleteUser(userId);
@@ -218,13 +208,28 @@ usersApp.post("/:id/password", async (c) => {
         
         await cloudron.setPassword(userId, password);
         await logAction(`Set password for user with ID '${userId}'`);
-        await storePassword(username, email, password);
         
         logger.info(`Successfully set password for user ${userId}.`);
         return c.json({ success: true });
     } catch (error) {
         logger.error(`Error setting password for user ${userId}:`, { message: error.message });
         return c.json({ error: error.message }, 500);
+    }
+});
+
+// --- GET /api/users/:id/password ---
+usersApp.get("/:id/password", async (c) => {
+    const userId = c.req.param("id");
+    try {
+        const password = await cloudron.getPassword(userId);
+        if (password) {
+            return c.json({ password });
+        } else {
+            return c.json({ message: "Password not found" }, 404);
+        }
+    } catch (error) {
+        logger.error(`Error retrieving password for user ${userId}:`, { message: error.message });
+        return c.json({ error: "Failed to retrieve password" }, 500);
     }
 });
 

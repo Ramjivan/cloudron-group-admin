@@ -63,6 +63,46 @@ document.addEventListener("DOMContentLoaded", () => {
         return response.json();
     };
 
+    const generatePassword = () => {
+        const length = 16;
+        const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=";
+        let password = "";
+        // Ensure password contains at least one of each character type
+        password += "abcdefghijklmnopqrstuvwxyz"[Math.floor(Math.random() * "abcdefghijklmnopqrstuvwxyz".length)];
+        password += "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[Math.floor(Math.random() * "ABCDEFGHIJKLMNOPQRSTUVWXYZ".length)];
+        password += "0123456789"[Math.floor(Math.random() * "0123456789".length)];
+        password += "!@#$%^&*()_+~`|}{[]:;?><,./-="[Math.floor(Math.random() * "!@#$%^&*()_+~`|}{[]:;?><,./-=".length)];
+
+        for (let i = 4; i < length; i++) {
+            password += charset.charAt(Math.floor(Math.random() * charset.length));
+        }
+        // Shuffle the password to randomize character positions
+        return password.split('').sort(() => 0.5 - Math.random()).join('');
+    };
+
+    const validatePassword = (password) => {
+        const errors = [];
+        if (password.length < 12) {
+            errors.push("Password must be at least 12 characters long.");
+        }
+        if (!/[a-z]/.test(password)) {
+            errors.push("Password must contain at least one lowercase letter.");
+        }
+        if (!/[A-Z]/.test(password)) {
+            errors.push("Password must contain at least one uppercase letter.");
+        }
+        if (!/[0-9]/.test(password)) {
+            errors.push("Password must contain at least one number.");
+        }
+        if (!/[!@#$%^&*()_+~`|}{[\]:;?><,./-=]/.test(password)) {
+            errors.push("Password must contain at least one special character.");
+        }
+        return {
+            isValid: errors.length === 0,
+            errors,
+        };
+    };
+
     // --- Data Fetching and Rendering ---
     const fetchAndDisplayData = async () => {
         try {
@@ -120,8 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </td>
                 <td>
                     <button class="secondary view-mailboxes-btn" data-id="${user.id}">View Mailboxes</button>
-                    <button class="secondary view-password-btn" data-id="${user.id}" data-username="${user.username}">View</button>
-                    <button class="secondary reset-password-btn" data-id="${user.id}">Reset</button>
+                    <button class="secondary reset-password-btn" data-id="${user.id}">Password</button>
                     <button class="${isActive ? 'warning' : 'secondary'} disable-btn" data-id="${user.id}" data-active="${isActive}">${isActive ? 'Disable' : 'Enable'}</button>
                     <button class="danger delete-btn" data-id="${user.id}" data-username="${user.username}">Delete</button>
                 </td>
@@ -424,14 +463,52 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!userData) return;
 
             const modal = document.getElementById('reset-password-modal');
+            modal.dataset.userId = userData.id; // Store userId on the modal
             const closeBtn = document.getElementById('close-reset-modal');
             const setPasswordForm = document.getElementById('set-password-form');
             const setPasswordError = document.getElementById('set-password-error');
+            const newPasswordInput = document.getElementById('new-password');
+            const confirmPasswordInput = document.getElementById('confirm-password');
+            const generatePasswordBtn = document.getElementById('generate-password-reset');
+            
+            const existingPasswordSection = document.getElementById('existing-password-section');
+            const existingPasswordWrapper = document.getElementById('existing-password-wrapper');
+            const existingPasswordInput = document.getElementById('existing-password');
+            const noPasswordMessage = document.getElementById('no-password-message');
+
+            // Reset modal state
+            setPasswordError.textContent = '';
+            setPasswordForm.reset();
+            existingPasswordSection.style.display = 'block';
+            existingPasswordWrapper.style.display = 'none';
+            noPasswordMessage.style.display = 'none';
+
+            // Fetch and display existing password
+            api(`/users/${userData.id}/password`)
+                .then(data => {
+                    if (data.password) {
+                        existingPasswordInput.value = data.password;
+                        existingPasswordWrapper.style.display = 'flex';
+                    } else {
+                        noPasswordMessage.style.display = 'block';
+                    }
+                })
+                .catch(() => {
+                    noPasswordMessage.textContent = 'Could not retrieve stored password.';
+                    noPasswordMessage.style.display = 'block';
+                });
+
+
+            generatePasswordBtn.onclick = () => {
+                const newPassword = generatePassword();
+                newPasswordInput.value = newPassword;
+                confirmPasswordInput.value = newPassword;
+            };
 
             modal.style.display = 'flex';
 
             closeBtn.onclick = () => modal.style.display = 'none';
-            onclick = (event) => {
+            window.onclick = (event) => {
                 if (event.target === modal) {
                     modal.style.display = 'none';
                 }
@@ -439,8 +516,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             setPasswordForm.onsubmit = async (e) => {
                 e.preventDefault();
-                const newPassword = document.getElementById('new-password').value;
-                const confirmPassword = document.getElementById('confirm-password').value;
+                const newPassword = newPasswordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
 
                 if (newPassword !== confirmPassword) {
                     setPasswordError.textContent = "Passwords do not match.";
@@ -516,26 +593,19 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        if (target.classList.contains("view-password-btn")) {
-            const username = target.dataset.username;
-            const key = prompt("Please enter the API key to view the password:");
-            if (key && username) {
-                try {
-                    const res = await api(`/users/${username}/password`, {
-                        headers: { "X-Audit-Key": key }
-                    });
-                    
-                    const viewPasswordModal = document.getElementById('view-password-modal');
-                    document.getElementById('view-password-username').textContent = username;
-                    document.getElementById('view-password-text').textContent = res.password;
-                    viewPasswordModal.style.display = 'flex';
 
-                } catch (error) {
-                    alert(`Error: ${error.message}`);
-                }
-            }
-        }
     });
+
+    const logAction = async (action) => {
+        try {
+            await api("/logs/audit", {
+                method: "POST",
+                body: JSON.stringify({ action }),
+            });
+        } catch (error) {
+            console.error("Failed to log action:", error);
+        }
+    };
 
     // --- Password Tool Event Listeners (View/Copy) ---
     document.addEventListener('click', (e) => {
@@ -549,6 +619,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 const isPassword = passwordInput.type === 'password';
                 passwordInput.type = isPassword ? 'text' : 'password';
                 target.textContent = isPassword ? '🙈' : '👁️';
+                if (inputId === 'existing-password' && isPassword) {
+                    const userId = document.getElementById('reset-password-modal').dataset.userId;
+                    logAction(`Viewed password for user ID ${userId}`);
+                }
             }
         }
 
@@ -558,7 +632,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const passwordInput = document.getElementById(inputId);
             if (passwordInput && passwordInput.value) {
                 navigator.clipboard.writeText(passwordInput.value)
-                    .then(() => alert('Password copied to clipboard!'))
+                    .then(() => {
+                        alert('Password copied to clipboard!');
+                        if (inputId === 'existing-password') {
+                            const userId = document.getElementById('reset-password-modal').dataset.userId;
+                            logAction(`Copied password for user ID ${userId}`);
+                        }
+                    })
                     .catch(_err => alert('Failed to copy password.'));
             } else {
                 alert('No password to copy.');
@@ -566,14 +646,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    document.getElementById('copy-viewed-password').addEventListener('click', () => {
-        const passwordText = document.getElementById('view-password-text').textContent;
-        if (passwordText) {
-            navigator.clipboard.writeText(passwordText)
-                .then(() => alert('Password copied to clipboard!'))
-                .catch(_err => alert('Failed to copy password.'));
-        }
-    });
+
 
     elements.mailboxListBody.addEventListener("click", async (e) => {
         const target = e.target;
@@ -642,19 +715,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     const closeModal = (modal) => modal.style.display = "none";
-    const viewPasswordModal = document.getElementById('view-password-modal');
     elements.closeCreationModal.addEventListener("click", () => closeModal(elements.creationModal));
     elements.closeLogModal.addEventListener("click", () => closeModal(elements.logModal));
     elements.closeResetModal.addEventListener("click", () => closeModal(elements.resetPasswordModal));
     elements.closeEditUserModal.addEventListener("click", () => closeModal(elements.editUserModal));
-    document.getElementById('close-view-password-modal').addEventListener('click', () => closeModal(viewPasswordModal));
 
     addEventListener("click", (e) => {
         if (e.target === elements.creationModal) closeModal(elements.creationModal);
         if (e.target === elements.logModal) closeModal(elements.logModal);
         if (e.target === elements.resetPasswordModal) closeModal(elements.resetPasswordModal);
         if (e.target === elements.editUserModal) closeModal(elements.editUserModal);
-        if (e.target === viewPasswordModal) closeModal(viewPasswordModal);
     });
 
     // --- Footer ---
@@ -667,10 +737,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const key = prompt("Please enter the API key:");
             if (key) {
                 try {
-                    const [logs, passwords] = await Promise.all([
-                        api("/logs", { headers: { "X-Audit-Key": key } }),
-                        api("/logs/passwords", { headers: { "X-Audit-Key": key } })
-                    ]);
+                    const logs = await api("/logs", { headers: { "X-Audit-Key": key } });
 
                     const logContent = document.getElementById('log-content');
                     logContent.innerHTML = logs.map(log => 
@@ -679,30 +746,6 @@ document.addEventListener("DOMContentLoaded", () => {
                             <span class="log-action">${log.action}</span>
                         </div>`
                     ).join("");
-
-                    const passwordLogContent = document.getElementById('password-log-content');
-                    passwordLogContent.innerHTML = `
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Username</th>
-                                    <th>Email</th>
-                                    <th>Password</th>
-                                    <th>Timestamp</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${passwords.map(p => `
-                                    <tr>
-                                        <td>${p.username}</td>
-                                        <td>${p.email}</td>
-                                        <td>${p.password}</td>
-                                        <td>${new Date(p.timestamp).toLocaleString()}</td>
-                                    </tr>
-                                `).join("")}
-                            </tbody>
-                        </table>
-                    `;
 
                     document.getElementById('log-modal').style.display = 'flex';
                 } catch (error) { 

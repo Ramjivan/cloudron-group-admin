@@ -58,9 +58,8 @@ mailboxesApp.post("/", async (c) => {
     }
 });
 
-import { masterPasswordAuth } from "./auth.ts";
 // DELETE /api/mailboxes/:domain/:name - Delete a mailbox
-mailboxesApp.delete("/:domain/:name", masterPasswordAuth, async (c) => {
+mailboxesApp.delete("/:domain/:name", async (c) => {
     const { domain, name } = c.req.param();
     try {
         await cloudron.deleteMailbox(domain, name);

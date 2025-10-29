@@ -2,7 +2,6 @@
 import { Hono } from "jsr:@hono/hono@^4.0.0";
 import * as cloudron from "../services/cloudron.ts";
 import { logAction, logger } from "../services/logger.ts";
-import { masterPasswordAuth } from "./auth.ts";
 
 const GROUP_NAME = Deno.env.get("CLOUDRON_GROUP_NAME");
 if (!GROUP_NAME) {
@@ -146,7 +145,7 @@ usersApp.put("/:id", async (c) => {
 });
 
 // --- DELETE /api/users/:id ---
-usersApp.delete("/:id", masterPasswordAuth, async (c) => {
+usersApp.delete("/:id", async (c) => {
     const userId = c.req.param("id");
     logger.info(`Request received to delete user with ID: ${userId}`);
 

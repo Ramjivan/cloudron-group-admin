@@ -220,7 +220,7 @@ export async function addUserToGroup(groupId: string, newUserId: string) {
 }
 
 // --- Mailbox Management ---
-export async function createMailbox(domain: string, name: string, ownerId: string, storageQuota?: number) {
+export async function createMailbox(domain: string, name: string, ownerId: string) {
     const res = await cloudronFetch(`/api/v1/mail/${domain}/mailboxes`, {
         method: "POST",
         body: JSON.stringify({
@@ -228,7 +228,7 @@ export async function createMailbox(domain: string, name: string, ownerId: strin
             ownerId: ownerId,
             ownerType: "user",
             active: true,
-            storageQuota: storageQuota || 0,
+            storageQuota: 0,
             messagesQuota: 0,
         }),
     });

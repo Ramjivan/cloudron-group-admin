@@ -81,10 +81,6 @@
                     <input type="password" id="confirm-password-user" placeholder="Confirm Password" required>
                     <input type="email" id="new-primary-email" placeholder="Primary Email" required>
                     <input type="email" id="recovery-email" placeholder="Recovery Email (Optional)">
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="create-mailbox-checkbox" checked>
-                        <label for="create-mailbox-checkbox">Create default mailbox</label>
-                    </div>
                     <div id="mailbox-name-wrapper">
                         <div class="email-field">
                             <input type="text" id="new-mailbox-name-user" placeholder="Mailbox name (defaults to username)">
@@ -111,15 +107,6 @@
                     <select id="new-mailbox-owner" required>
                         <option value="" disabled selected>Select owner</option>
                     </select>
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="enable-storage-quota">
-                        <label for="enable-storage-quota">Set storage quota</label>
-                    </div>
-                    <div id="storage-quota-wrapper" style="display: none;">
-                        <label for="storage-quota-slider">Storage (GB): <span id="storage-quota-value">5</span></label>
-                        <input type="range" id="storage-quota-slider" min="1" max="100" value="5">
-                        <input type="number" id="storage-quota-input" min="1" max="100" value="5" class="storage-input">
-                    </div>
                     <button type="submit">Create Mailbox</button>
                     <p id="add-mailbox-error" class="error-message"></p>
                 </form>

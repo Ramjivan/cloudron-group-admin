@@ -13,7 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
         // Inputs
         newUsernameInput: document.getElementById("new-username"),
         newDisplayNameInput: document.getElementById("new-displayname"),
-        createMailboxCheckbox: document.getElementById("create-mailbox-checkbox"),
         mailboxNameWrapper: document.getElementById("mailbox-name-wrapper"),
         newMailboxNameUserInput: document.getElementById("new-mailbox-name-user"),
         newMailboxDomainUserSelect: document.getElementById("new-mailbox-domain-user"),
@@ -240,13 +239,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let isUsernameAvailable = false;
     let isMailboxAvailable = false;
 
-    const updateUserButtonState = () => {
-        const createMailbox = elements.createMailboxCheckbox.checked;
-        if (createMailbox) {
-            elements.createUserBtn.disabled = !isUsernameAvailable || !isMailboxAvailable;
-        } else {
-            elements.createUserBtn.disabled = !isUsernameAvailable;
-        }
+    const updateCreateUserButtonState = () => {
+        elements.createUserBtn.disabled = !isUsernameAvailable || !isMailboxAvailable;
     };
 
     const handleUsernameCheck = async () => {
@@ -277,7 +271,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 elements.newUsernameInput.classList.add('error');
             }
         }
-        updateUserButtonState();
+        updateCreateUserButtonState();
     };
 
     const handleMailboxCheck = async (nameInput, domainSelect, messageEl) => {
@@ -308,7 +302,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 nameInput.classList.add('error');
             }
         }
-        updateUserButtonState();
+        updateCreateUserButtonState();
     };
     
     let usernameDebounceTimer, userMailboxDebounceTimer, newMailboxDebounceTimer;
@@ -352,7 +346,11 @@ document.addEventListener("DOMContentLoaded", () => {
         ), 500);
     });
 
-    elements.createMailboxCheckbox.addEventListener("change", updateUserButtonState);
+    document.getElementById("generate-password-add").addEventListener("click", () => {
+        const newPassword = generatePassword();
+        document.getElementById("new-password-user").value = newPassword;
+        document.getElementById("confirm-password-user").value = newPassword;
+    });
 
     // --- Event Listeners ---
     elements.addUserForm.addEventListener("submit", async (e) => {
@@ -364,7 +362,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const confirmPassword = document.getElementById('confirm-password-user').value;
         const email = document.getElementById('new-primary-email').value;
         const fallbackEmail = document.getElementById('recovery-email').value;
-        const createMailbox = elements.createMailboxCheckbox.checked;
+        const createMailbox = true;
         const mailboxName = elements.newMailboxNameUserInput.value || username;
         const domain = elements.newMailboxDomainUserSelect.value;
 
@@ -408,14 +406,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const domain = elements.newMailboxDomainSelect.value;
         const ownerId = elements.newMailboxOwnerSelect.value;
 
-        const storageQuotaEnabled = document.getElementById("enable-storage-quota").checked;
-        const storageQuotaGB = document.getElementById("storage-quota-input").value;
-        const storageQuota = storageQuotaEnabled ? parseInt(storageQuotaGB) * 1024 * 1024 * 1024 : 0;
-
         try {
             await api("/mailboxes", {
                 method: "POST",
-                body: JSON.stringify({ name, domain, ownerId, storageQuota }),
+                body: JSON.stringify({ name, domain, ownerId, storageQuota: 0 }),
             });
             elements.addMailboxForm.reset();
             elements.creationModal.style.display = "none";
@@ -423,10 +417,6 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) {
             elements.addMailboxError.textContent = `Error: ${error.message}`;
         }
-    });
-
-    elements.createMailboxCheckbox.addEventListener("change", () => {
-        elements.mailboxNameWrapper.style.display = elements.createMailboxCheckbox.checked ? "block" : "none";
     });
 
     function getUserDataFromRow(button) {
@@ -446,7 +436,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const userId = target.dataset.id;
         if (target.classList.contains("delete-btn")) {
             const username = target.dataset.username;
-            if (confirm(`Delete user '${username}'?`)) {
+            if (confirm(`Deleting user '${username}' will delete all mailboxes associated with this user. Are you sure?`)) {
                 try { await api(`/users/${userId}`, { method: "DELETE" }); fetchAndDisplayData(); } 
                 catch (error) { alert(`Error: ${error.message}`); }
             }
@@ -653,7 +643,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (target.classList.contains("delete-mailbox-btn")) {
             const name = target.dataset.name;
             const domain = target.dataset.domain;
-            if (confirm(`Delete mailbox '${name}@${domain}'?`)) {
+            if (confirm(`Deleting mailbox '${name}@${domain}' will delete all emails in it. Are you sure?`)) {
                 try {
                     await api(`/mailboxes/${domain}/${name}`, { method: "DELETE" });
                     fetchAndDisplayData();
@@ -672,7 +662,6 @@ document.addEventListener("DOMContentLoaded", () => {
         elements.tabContents.forEach(content => content.classList.remove("active"));
         elements.tabLinks[0].classList.add("active");
         elements.tabContents[0].classList.add("active");
-        elements.createMailboxCheckbox.checked = true;
         elements.mailboxNameWrapper.style.display = "block";
     });
 

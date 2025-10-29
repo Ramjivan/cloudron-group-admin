@@ -45,11 +45,11 @@ mailboxesApp.get("/user/:userId", async (c) => {
 // POST /api/mailboxes - Create a new mailbox
 mailboxesApp.post("/", async (c) => {
     try {
-        const { name, domain, ownerId, storageQuota } = await c.req.json();
+        const { name, domain, ownerId } = await c.req.json();
         if (!name || !domain || !ownerId) {
             return c.json({ error: "name, domain, and ownerId are required" }, 400);
         }
-        const newMailbox = await cloudron.createMailbox(domain, name, ownerId, storageQuota);
+        const newMailbox = await cloudron.createMailbox(domain, name, ownerId, 0);
         await logAction(`Created mailbox '${name}@${domain}'`);
         return c.json(newMailbox, 201);
     } catch (error) {
@@ -58,9 +58,8 @@ mailboxesApp.post("/", async (c) => {
     }
 });
 
-import { masterPasswordAuth } from "./auth.ts";
 // DELETE /api/mailboxes/:domain/:name - Delete a mailbox
-mailboxesApp.delete("/:domain/:name", masterPasswordAuth, async (c) => {
+mailboxesApp.delete("/:domain/:name", async (c) => {
     const { domain, name } = c.req.param();
     try {
         await cloudron.deleteMailbox(domain, name);

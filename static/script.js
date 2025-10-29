@@ -440,7 +440,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const userId = target.dataset.id;
         if (target.classList.contains("delete-btn")) {
             const username = target.dataset.username;
-            if (confirm(`Delete user '${username}'?`)) {
+            if (confirm(`Deleting user '${username}' will delete all mailboxes associated with this user. Are you sure?`)) {
                 try { await api(`/users/${userId}`, { method: "DELETE" }); fetchAndDisplayData(); } 
                 catch (error) { alert(`Error: ${error.message}`); }
             }
@@ -647,7 +647,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (target.classList.contains("delete-mailbox-btn")) {
             const name = target.dataset.name;
             const domain = target.dataset.domain;
-            if (confirm(`Delete mailbox '${name}@${domain}'?`)) {
+            if (confirm(`Deleting mailbox '${name}@${domain}' will delete all emails in it. Are you sure?`)) {
                 try {
                     await api(`/mailboxes/${domain}/${name}`, { method: "DELETE" });
                     fetchAndDisplayData();

@@ -406,14 +406,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const domain = elements.newMailboxDomainSelect.value;
         const ownerId = elements.newMailboxOwnerSelect.value;
 
-        const storageQuotaEnabled = document.getElementById("enable-storage-quota").checked;
-        const storageQuotaGB = document.getElementById("storage-quota-input").value;
-        const storageQuota = storageQuotaEnabled ? parseInt(storageQuotaGB) * 1024 * 1024 * 1024 : 0;
-
         try {
             await api("/mailboxes", {
                 method: "POST",
-                body: JSON.stringify({ name, domain, ownerId, storageQuota }),
+                body: JSON.stringify({ name, domain, ownerId, storageQuota: 0 }),
             });
             elements.addMailboxForm.reset();
             elements.creationModal.style.display = "none";

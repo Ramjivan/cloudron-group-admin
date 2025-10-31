@@ -31,11 +31,12 @@ async function getManagedGroupId(): Promise<string> {
 // --- GET /api/users ---
 // Lists users who are members of the configured group, excluding specified accounts
 usersApp.get("/", async (c) => {
-    logger.info("Request received to list users.");
+    const { page = 1, per_page = 25, search = "" } = c.req.query();
+    logger.info(`Request received to list users (page: ${page}, per_page: ${per_page}, search: ${search}).`);
     try {
         const groupId = await getManagedGroupId();
-        const [allUsersRes, groupDetails] = await Promise.all([
-            cloudron.getUsers(),
+        const [allUsers, groupDetails] = await Promise.all([
+            cloudron.getAllUsers(),
             cloudron.getGroupDetails(groupId),
         ]);
 
@@ -45,14 +46,31 @@ usersApp.get("/", async (c) => {
         }
 
         const memberIds = new Set(groupDetails.userIds);
-        const groupUsers = allUsersRes.users.filter((u: any) => memberIds.has(u.id));
+        const groupUsers = allUsers.filter((u: any) => memberIds.has(u.id));
 
         // Filter out excluded accounts
         const excludeAccounts = new Set(Deno.env.get("EXCLUDE_ACCOUNTS")?.split(',').map(s => s.trim()));
-        const filteredUsers = groupUsers.filter((u: any) => !excludeAccounts.has(u.username));
+        let filteredUsers = groupUsers.filter((u: any) => !excludeAccounts.has(u.username));
+
+        if (search) {
+            const searchTerm = search.toLowerCase();
+            filteredUsers = filteredUsers.filter(user =>
+                user.username.toLowerCase().includes(searchTerm) ||
+                user.displayName.toLowerCase().includes(searchTerm) ||
+                user.email.toLowerCase().includes(searchTerm)
+            );
+        }
         
-        logger.info(`Found ${groupUsers.length} users in group, returning ${filteredUsers.length} after exclusions.`);
-        return c.json(filteredUsers);
+        const total = filteredUsers.length;
+        const start = (page - 1) * per_page;
+        const end = start + per_page;
+        const paginatedUsers = filteredUsers.slice(start, end);
+
+        logger.info(`Found ${total} users in group, returning ${paginatedUsers.length} for page ${page}.`);
+        return c.json({
+            users: paginatedUsers,
+            total: total,
+        });
     } catch (error) {
         logger.error("Error listing users:", { message: error.message });
         return c.json({ error: error.message }, 500);
@@ -94,18 +112,13 @@ usersApp.post("/", async (c) => {
             return c.json({ error: "Fallback email cannot be the same as the primary email." }, 400);
         }
 
-        const groupId = await getManagedGroupId();
         const primaryDomain = email.split('@')[1];
 
-        // 1. Create User
+        // 1. Create User (which now includes adding to the default group)
         const newUser = await cloudron.createUser(username, displayName, email, password, fallbackEmail);
         await logAction(`Created user '${username}' (ID: ${newUser.id})`);
 
-        // 2. Add to Group
-        await cloudron.addUserToGroup(groupId, newUser.id);
-        await logAction(`Added user '${username}' to group '${GROUP_NAME}'`);
-
-        // 3. Optionally Create Mailbox
+        // 2. Optionally Create Mailbox
         if (createMailbox) {
             if (!primaryDomain) {
                 throw new Error("Cannot create default mailbox: No valid mail domains are configured.");

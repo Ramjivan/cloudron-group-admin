@@ -54,11 +54,35 @@ export function getValidMailDomains(): string[] {
 }
 
 // --- User Management ---
-export async function getUsers() {
-    const res = await cloudronFetch("/api/v1/users");
+export async function getUsers(page = 1, per_page = 20, search?: string, active?: boolean) {
+    let path = `/api/v1/users?page=${page}&per_page=${per_page}`;
+    if (search) {
+        path += `&search=${encodeURIComponent(search)}`;
+    }
+    if (typeof active === 'boolean') {
+        path += `&active=${active}`;
+    }
+    const res = await cloudronFetch(path);
     if (!res.ok) throw new Error("Failed to fetch users");
     return res.json();
 }
+
+export async function getAllUsers() {
+    let allUsers: any[] = [];
+    let page = 1;
+    const per_page = 50;
+    while (true) {
+        const data = await getUsers(page, per_page);
+        const users = data.users;
+        if (users.length === 0) {
+            break;
+        }
+        allUsers = allUsers.concat(users);
+        page++;
+    }
+    return allUsers;
+}
+
 export async function getUserByUsername(username: string) {
     const res = await cloudronFetch(`/api/v1/users?search=${encodeURIComponent(username)}`);
     if (!res.ok) throw new Error("Failed to fetch user by username");
@@ -92,6 +116,25 @@ export async function createUser(
         throw new Error(`Failed to create user: ${error.message}`);
     }
     const newUser = await res.json();
+
+    // Automatically add user to the default group
+    const groupName = Deno.env.get("CLOUDRON_GROUP_NAME");
+    if (groupName) {
+        try {
+            const group = await getGroup(groupName);
+            if (group && group.id) {
+                await addUserToGroup(group.id, newUser.id);
+                logger.info(`Successfully added user ${newUser.id} to group ${groupName} (${group.id}).`);
+            } else {
+                logger.warn(`Default group '${groupName}' not found. User was created but not added to any group.`);
+            }
+        } catch (error) {
+            logger.error(`Failed to add user ${newUser.id} to group '${groupName}':`, error);
+            // Do not re-throw; the user was still created successfully.
+        }
+    } else {
+        logger.warn("CLOUDRON_GROUP_NAME is not set. User was created but not added to any group.");
+    }
 
     // Store the password in Deno KV
     try {
@@ -254,20 +297,34 @@ export async function getMailbox(domain: string, name: string) {
     }
     return res.json();
 }
+async function listMailboxesForDomain(domain: string) {
+    let mailboxes: any[] = [];
+    let page = 1;
+    const per_page = 50;
+    while (true) {
+        const res = await cloudronFetch(`/api/v1/mail/${domain}/mailboxes?page=${page}&per_page=${per_page}`);
+        if (!res.ok) {
+            logger.error(`Failed to list mailboxes for domain ${domain}.`);
+            break;
+        }
+        const data = await res.json();
+        if (data && Array.isArray(data.mailboxes) && data.mailboxes.length > 0) {
+            mailboxes = mailboxes.concat(data.mailboxes.map(m => ({...m, domain})));
+            page++;
+        } else {
+            break;
+        }
+    }
+    return mailboxes;
+}
+
 export async function listAllMailboxes() {
     await checkMailServerDomains();
     const domains = getValidMailDomains();
     let allMailboxes: any[] = [];
     for (const domain of domains) {
-        const res = await cloudronFetch(`/api/v1/mail/${domain}/mailboxes`);
-        if (res.ok) {
-            const data = await res.json();
-            if (data && Array.isArray(data.mailboxes)) {
-                allMailboxes = allMailboxes.concat(data.mailboxes.map(m => ({...m, domain})));
-            }
-        } else {
-            logger.error(`Failed to list mailboxes for verified domain ${domain}.`);
-        }
+        const domainMailboxes = await listMailboxesForDomain(domain);
+        allMailboxes = allMailboxes.concat(domainMailboxes);
     }
     return allMailboxes;
 }

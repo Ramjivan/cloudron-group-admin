@@ -7,22 +7,40 @@ const mailboxesApp = new Hono();
 
 // GET /api/mailboxes - List all mailboxes, excluding those of excluded users
 mailboxesApp.get("/", async (c) => {
+    const { page = 1, per_page = 25, search = "" } = c.req.query();
+    logger.info(`Request received to list mailboxes (page: ${page}, per_page: ${per_page}, search: ${search}).`);
     try {
         const [mailboxes, users] = await Promise.all([
             cloudron.listAllMailboxes(),
-            cloudron.getUsers(),
+            cloudron.getAllUsers(),
         ]);
 
         const excludeAccounts = new Set(Deno.env.get("EXCLUDE_ACCOUNTS")?.split(',').map(s => s.trim()));
-        const userMap = new Map(users.users.map(u => [u.id, u.username]));
+        const userMap = new Map(users.map(u => [u.id, u.username]));
 
-        const filteredMailboxes = mailboxes.filter(mbx => {
+        let filteredMailboxes = mailboxes.filter(mbx => {
             const ownerUsername = userMap.get(mbx.ownerId);
             return ownerUsername && !excludeAccounts.has(ownerUsername);
         });
 
-        logger.info(`Found ${mailboxes.length} total mailboxes, returning ${filteredMailboxes.length} after exclusions.`);
-        return c.json(filteredMailboxes);
+        if (search) {
+            const searchTerm = search.toLowerCase();
+            filteredMailboxes = filteredMailboxes.filter(mailbox =>
+                `${mailbox.name}@${mailbox.domain}`.toLowerCase().includes(searchTerm) ||
+                (userMap.get(mailbox.ownerId) || "").toLowerCase().includes(searchTerm)
+            );
+        }
+
+        const total = filteredMailboxes.length;
+        const start = (page - 1) * per_page;
+        const end = start + per_page;
+        const paginatedMailboxes = filteredMailboxes.slice(start, end);
+
+        logger.info(`Found ${total} total mailboxes, returning ${paginatedMailboxes.length} after exclusions for page ${page}.`);
+        return c.json({
+            mailboxes: paginatedMailboxes,
+            total: total,
+        });
     } catch (error) {
         logger.error("Error listing all mailboxes:", { message: error.message });
         return c.json({ error: "Failed to list all mailboxes" }, 500);

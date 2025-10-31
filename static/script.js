@@ -1,4 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // --- State ---
+    let currentPage = 1;
+    let itemsPerPage = 25;
+    let totalUsers = 0;
+    let userSearchQuery = "";
+    let mailboxCurrentPage = 1;
+    let mailboxItemsPerPage = 25;
+    let totalMailboxes = 0;
+    let mailboxSearchQuery = "";
+
     // --- Element Cache ---
     const elements = {
         // Forms
@@ -40,9 +50,22 @@ document.addEventListener("DOMContentLoaded", () => {
         dashboardTitle: document.getElementById("dashboard-title"),
         copyright: document.getElementById("copyright"),
         // Modal Tabs
-        tabsContainer: document.querySelector(".tabs"),
-        tabLinks: document.querySelectorAll(".tab-link"),
-        tabContents: document.querySelectorAll(".tab-content"),
+        modalTabsContainer: document.querySelector("#creation-modal .tabs"),
+        modalTabLinks: document.querySelectorAll("#creation-modal .tab-link"),
+        modalTabContents: document.querySelectorAll("#creation-modal .tab-content"),
+        mainTabsContainer: document.querySelector(".main-tabs"),
+        // Pagination
+        itemsPerPageSelect: document.getElementById("items-per-page"),
+        prevPageBtn: document.getElementById("prev-page-btn"),
+        nextPageBtn: document.getElementById("next-page-btn"),
+        pageInfo: document.getElementById("page-info"),
+        mailboxItemsPerPageSelect: document.getElementById("mailbox-items-per-page"),
+        mailboxPrevPageBtn: document.getElementById("mailbox-prev-page-btn"),
+        mailboxNextPageBtn: document.getElementById("mailbox-next-page-btn"),
+        mailboxPageInfo: document.getElementById("mailbox-page-info"),
+        // Search
+        userSearchInput: document.getElementById("user-search"),
+        mailboxSearchInput: document.getElementById("mailbox-search"),
     };
 
     // --- API Helper ---
@@ -105,23 +128,30 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- Data Fetching and Rendering ---
     const fetchAndDisplayData = async () => {
         try {
-            console.log("Fetching initial data from API...");
-            const [users, mailboxes, config] = await Promise.all([
-                api("/users"),
-                api("/mailboxes"),
+            console.log(`Fetching data for page ${currentPage} with ${itemsPerPage} items per page...`);
+            const userApiUrl = `/users?page=${currentPage}&per_page=${itemsPerPage}&search=${encodeURIComponent(userSearchQuery)}`;
+            const mailboxApiUrl = `/mailboxes?page=${mailboxCurrentPage}&per_page=${mailboxItemsPerPage}&search=${encodeURIComponent(mailboxSearchQuery)}`;
+
+            const [userData, mailboxData, config] = await Promise.all([
+                api(userApiUrl),
+                api(mailboxApiUrl),
                 api("/config")
             ]);
 
-            console.log("Data received:", { users, mailboxes, config });
+            console.log("Data received:", { userData, mailboxData, config });
 
-            if (!users || !mailboxes || !config) {
+            if (!userData || !mailboxData || !config) {
                 throw new Error("One or more API endpoints returned null or empty data.");
             }
 
+            totalUsers = userData.total;
+            totalMailboxes = mailboxData.total;
             console.log("Rendering data...");
-            renderUsers(users);
-            renderMailboxes(mailboxes, users);
-            renderSelects(config.domains, users);
+            renderUsers(userData.users);
+            renderMailboxes(mailboxData.mailboxes, userData.users);
+            renderSelects(config.domains, userData.users);
+            updatePaginationControls();
+            updateMailboxPaginationControls();
             elements.dashboardTitle.textContent = `${config.brandName} User Management`;
             console.log("Data rendering complete.");
 
@@ -129,6 +159,20 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("Failed to fetch or render initial data:", error);
             alert(`A critical error occurred: ${error.message}\n\nPlease check the browser's developer console for more details.`);
         }
+    };
+
+    const updatePaginationControls = () => {
+        const totalPages = Math.ceil(totalUsers / itemsPerPage);
+        elements.pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+        elements.prevPageBtn.disabled = currentPage === 1;
+        elements.nextPageBtn.disabled = currentPage === totalPages;
+    };
+
+    const updateMailboxPaginationControls = () => {
+        const totalPages = Math.ceil(totalMailboxes / mailboxItemsPerPage);
+        elements.mailboxPageInfo.textContent = `Page ${mailboxCurrentPage} of ${totalPages}`;
+        elements.mailboxPrevPageBtn.disabled = mailboxCurrentPage === 1;
+        elements.mailboxNextPageBtn.disabled = mailboxCurrentPage === totalPages;
     };
 
     const renderUsers = (users) => {
@@ -658,17 +702,17 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- Modals & Tabs ---
     elements.addNewBtn.addEventListener("click", () => {
         elements.creationModal.style.display = "flex";
-        elements.tabLinks.forEach(link => link.classList.remove("active"));
-        elements.tabContents.forEach(content => content.classList.remove("active"));
-        elements.tabLinks[0].classList.add("active");
-        elements.tabContents[0].classList.add("active");
+        elements.modalTabLinks.forEach(link => link.classList.remove("active"));
+        elements.modalTabContents.forEach(content => content.classList.remove("active"));
+        elements.modalTabLinks[0].classList.add("active");
+        elements.modalTabContents[0].classList.add("active");
         elements.mailboxNameWrapper.style.display = "block";
     });
 
-    elements.tabsContainer.addEventListener("click", (e) => {
+    elements.modalTabsContainer.addEventListener("click", (e) => {
         if (e.target.classList.contains("tab-link")) {
-            elements.tabLinks.forEach(link => link.classList.remove("active"));
-            elements.tabContents.forEach(content => content.classList.remove("active"));
+            elements.modalTabLinks.forEach(link => link.classList.remove("active"));
+            elements.modalTabContents.forEach(content => content.classList.remove("active"));
             e.target.classList.add("active");
             document.getElementById(e.target.dataset.tab).classList.add("active");
         }
@@ -747,6 +791,76 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     };
+
+    elements.itemsPerPageSelect.addEventListener("change", () => {
+        itemsPerPage = parseInt(elements.itemsPerPageSelect.value, 10);
+        currentPage = 1;
+        fetchAndDisplayData();
+    });
+
+    elements.prevPageBtn.addEventListener("click", () => {
+        if (currentPage > 1) {
+            currentPage--;
+            fetchAndDisplayData();
+        }
+    });
+
+    elements.nextPageBtn.addEventListener("click", () => {
+        const totalPages = Math.ceil(totalUsers / itemsPerPage);
+        if (currentPage < totalPages) {
+            currentPage++;
+            fetchAndDisplayData();
+        }
+    });
+
+    elements.mainTabsContainer.addEventListener("click", (e) => {
+        if (e.target.classList.contains("tab-link")) {
+            document.querySelectorAll(".main-tabs .tab-link").forEach(link => link.classList.remove("active"));
+            document.querySelectorAll(".container > .tab-content").forEach(content => content.classList.remove("active"));
+            e.target.classList.add("active");
+            document.getElementById(e.target.dataset.tab).classList.add("active");
+        }
+    });
+
+    elements.mailboxItemsPerPageSelect.addEventListener("change", () => {
+        mailboxItemsPerPage = parseInt(elements.mailboxItemsPerPageSelect.value, 10);
+        mailboxCurrentPage = 1;
+        fetchAndDisplayData();
+    });
+
+    elements.mailboxPrevPageBtn.addEventListener("click", () => {
+        if (mailboxCurrentPage > 1) {
+            mailboxCurrentPage--;
+            fetchAndDisplayData();
+        }
+    });
+
+    elements.mailboxNextPageBtn.addEventListener("click", () => {
+        const totalPages = Math.ceil(totalMailboxes / mailboxItemsPerPage);
+        if (mailboxCurrentPage < totalPages) {
+            mailboxCurrentPage++;
+            fetchAndDisplayData();
+        }
+    });
+
+    let searchDebounceTimer;
+    elements.userSearchInput.addEventListener("input", (e) => {
+        clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = setTimeout(() => {
+            userSearchQuery = e.target.value;
+            currentPage = 1;
+            fetchAndDisplayData();
+        }, 300);
+    });
+
+    elements.mailboxSearchInput.addEventListener("input", (e) => {
+        clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = setTimeout(() => {
+            mailboxSearchQuery = e.target.value;
+            mailboxCurrentPage = 1;
+            fetchAndDisplayData();
+        }, 300);
+    });
 
     // --- Initial Load ---
     setFooter();

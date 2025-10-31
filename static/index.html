@@ -18,37 +18,74 @@
         </header>
 
         <main class="container">
-            <!-- User List -->
-            <div class="card">
-                <h3>Group Users</h3>
-                <table id="user-list">
-                    <thead>
-                        <tr>
-                            <th>Username</th>
-                            <th>Display Name</th>
-                            <th>Email</th>
-                            <th>Status</th>
-                            <th>Edit</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+            <div class="tabs main-tabs">
+                <button class="tab-link active" data-tab="users-tab">Users</button>
+                <button class="tab-link" data-tab="mailboxes-tab">Mailboxes</button>
             </div>
 
-            <!-- Mailbox List -->
-            <div class="card">
-                <h3>All Mailboxes</h3>
-                <table id="mailbox-list">
-                    <thead>
-                        <tr>
-                            <th>Address</th>
-                            <th>Owner</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+            <!-- Users Tab -->
+            <div id="users-tab" class="tab-content active">
+                <div class="card">
+                    <h3>Group Users</h3>
+                    <div class="search-container">
+                        <input type="text" id="user-search" placeholder="Search users...">
+                    </div>
+                    <table id="user-list">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Display Name</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Edit</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <div class="pagination-controls">
+                        <select id="items-per-page">
+                            <option value="10">10 per page</option>
+                            <option value="25" selected>25 per page</option>
+                            <option value="50">50 per page</option>
+                            <option value="100">100 per page</option>
+                        </select>
+                        <button id="prev-page-btn" disabled>&laquo; Previous</button>
+                        <span id="page-info">Page 1</span>
+                        <button id="next-page-btn">Next &raquo;</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mailboxes Tab -->
+            <div id="mailboxes-tab" class="tab-content">
+                <div class="card">
+                    <h3>All Mailboxes</h3>
+                    <div class="search-container">
+                        <input type="text" id="mailbox-search" placeholder="Search mailboxes...">
+                    </div>
+                    <table id="mailbox-list">
+                        <thead>
+                            <tr>
+                                <th>Address</th>
+                                <th>Owner</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <div class="pagination-controls">
+                        <select id="mailbox-items-per-page">
+                            <option value="10">10 per page</option>
+                            <option value="25" selected>25 per page</option>
+                            <option value="50">50 per page</option>
+                            <option value="100">100 per page</option>
+                        </select>
+                        <button id="mailbox-prev-page-btn" disabled>&laquo; Previous</button>
+                        <span id="mailbox-page-info">Page 1</span>
+                        <button id="mailbox-next-page-btn">Next &raquo;</button>
+                    </div>
+                </div>
             </div>
         </main>
 
@@ -60,7 +97,7 @@
     <div id="creation-modal" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="close-btn" id="close-creation-modal">&times;</span>
-            <div class="tabs">
+            <div class="tabs modal-tabs">
                 <button class="tab-link active" data-tab="add-user-tab">Add User</button>
                 <button class="tab-link" data-tab="add-mailbox-tab">Add Mailbox</button>
             </div>
@@ -140,7 +177,7 @@
     <div id="log-modal" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="close-btn" id="close-log-modal">&times;</span>
-            <div class="tabs">
+            <div class="tabs modal-tabs">
                 <button class="tab-link active" data-tab="audit-log-tab">Audit Logs</button>
             </div>
             <div id="audit-log-tab" class="tab-content active">
